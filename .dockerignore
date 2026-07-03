@@ -1,0 +1,22 @@
+# Build output & IDE cache — never send these into the build context
+**/bin/
+**/obj/
+**/.vs/
+
+# Git
+**/.git/
+**/.gitignore
+**/.gitattributes
+
+# Docker
+**/Dockerfile*
+**/.dockerignore
+
+# User-specific / secrets
+**/*.user
+**/secrets.json
+**/appsettings.*.local.json
+
+# OS junk
+**/.DS_Store
+**/Thumbs.db
