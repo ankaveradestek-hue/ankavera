@@ -1,0 +1,176 @@
+﻿@model List<ANKAVERA_İÇ_GİYİM.Models.FavoriteItem>
+@{
+    ViewData["Title"] = "Favorilerim";
+    Layout = "_Layout";
+}
+
+<div style="min-height:calc(100vh - 70px); background:#fff5f7; padding:3rem 1rem;">
+    <div style="max-width:1150px; margin:0 auto;">
+
+        <!-- Başlık -->
+        <div style="text-align:center; margin-bottom:2.5rem;">
+            <p style="font-size:0.7rem; font-weight:500; letter-spacing:0.25em;
+                text-transform:uppercase; color:#f43f7a; margin-bottom:0.6rem;">
+                ✦ Listem ✦
+            </p>
+            <h1 style="font-family:'Cormorant Garamond',serif; font-size:2.75rem;
+                font-weight:300; color:#881337; letter-spacing:0.04em;
+                margin-bottom:0.5rem;">
+                Favorilerim
+            </h1>
+            <div style="width:2.5rem; height:1px; margin:0.75rem auto;
+                background:linear-gradient(90deg,transparent,#f43f7a,transparent);">
+            </div>
+            @if (Model.Any())
+            {
+                <p style="color:#be7094; font-size:0.82rem; font-weight:300;">
+                    @Model.Count favori ürün
+                </p>
+            }
+        </div>
+
+        <!-- Toast -->
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div style="max-width:500px; margin:0 auto 1.5rem;
+                background:#f0fdf4; border:1px solid #bbf7d0;
+                border-left:3px solid #22c55e; border-radius:0.75rem;
+                padding:0.85rem 1rem; color:#15803d; font-size:0.82rem;">
+                ✓ @TempData["SuccessMessage"]
+            </div>
+        }
+
+        @if (!Model.Any())
+        {
+            <!-- Boş Durum -->
+            <div style="max-width:440px; margin:0 auto; text-align:center;
+                background:white; border-radius:2rem; padding:4rem 2rem;
+                box-shadow:0 4px 25px rgba(225,29,72,0.07);">
+                <div style="font-size:4rem; margin-bottom:1.25rem; line-height:1;">🤍</div>
+                <h2 style="font-family:'Cormorant Garamond',serif; font-size:1.8rem;
+                    font-weight:300; color:#881337; margin-bottom:0.75rem;">
+                    Favoriniz Yok
+                </h2>
+                <p style="color:#be7094; font-size:0.85rem; font-weight:300;
+                    line-height:1.7; margin-bottom:2rem;">
+                    Beğendiğiniz ürünlerin kalp ikonuna tıklayarak favorilerinize ekleyebilirsiniz.
+                </p>
+                <a asp-controller="Collections" asp-action="Index"
+                   style="display:inline-block; padding:0.9rem 2.25rem;
+                    background:linear-gradient(135deg,#f472b6,#e11d48,#be185d);
+                    color:white; border-radius:9999px; font-size:0.8rem;
+                    font-weight:600; letter-spacing:0.12em; text-transform:uppercase;
+                    text-decoration:none;
+                    box-shadow:0 6px 20px rgba(225,29,72,0.3);">
+                    Ürünleri Keşfet
+                </a>
+            </div>
+        }
+        else
+        {
+            <!-- Ürün Grid -->
+            <div style="display:grid;
+                grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
+                gap:1.5rem;">
+
+                @foreach (var item in Model)
+                {
+                    <div style="background:white; border-radius:1.5rem; overflow:hidden;
+                        box-shadow:0 4px 18px rgba(225,29,72,0.07);
+                        transition:transform 0.3s, box-shadow 0.3s;"
+                         onmouseover="this.style.transform='translateY(-7px)';
+                        this.style.boxShadow='0 18px 45px rgba(197,48,89,0.16)'"
+                         onmouseout="this.style.transform='translateY(0)';
+                        this.style.boxShadow='0 4px 18px rgba(225,29,72,0.07)'">
+
+                        <!-- Görsel -->
+                        <div style="position:relative; aspect-ratio:3/4; overflow:hidden;
+                            background:#fce7f3;">
+                            <img src="@item.ImageUrl"
+                                 alt="@item.Name"
+                                 style="width:100%; height:100%; object-fit:cover;
+                            transition:transform 0.5s;"
+                                 onmouseover="this.style.transform='scale(1.07)'"
+                                 onmouseout="this.style.transform='scale(1)'"
+                                 onerror="this.src='https://images.unsplash.com/photo-1617922001439-4a2e6562f328?w=400'" />
+
+                            <!-- Favoriden Çıkar -->
+                            <form asp-controller="Favorite" asp-action="Remove"
+                                  method="post"
+                                  style="position:absolute; top:0.75rem; right:0.75rem;">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="productId" value="@item.ProductId" />
+                                <button type="submit"
+                                        title="Favorilerden çıkar"
+                                        style="width:36px; height:36px; border-radius:50%;
+                                    background:white; border:none; cursor:pointer;
+                                    display:flex; align-items:center;
+                                    justify-content:center; font-size:1rem;
+                                    box-shadow:0 2px 10px rgba(0,0,0,0.1);
+                                    transition:transform 0.2s;"
+                                        onmouseover="this.style.transform='scale(1.12)'"
+                                        onmouseout="this.style.transform='scale(1)'">
+                                    ❤️
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Bilgi -->
+                        <div style="padding:1.1rem 1.25rem 1.25rem;">
+                            <p style="font-size:0.67rem; color:#f43f7a; text-transform:uppercase;
+                                letter-spacing:0.12em; font-weight:500; margin-bottom:0.3rem;">
+                                @item.Category
+                            </p>
+                            <h3 style="font-family:'Cormorant Garamond',serif; font-size:1.1rem;
+                                font-weight:400; color:#881337; margin-bottom:0.75rem;
+                                line-height:1.3;">
+                                @item.Name
+                            </h3>
+                            <div style="display:flex; align-items:center;
+                                justify-content:space-between; gap:0.5rem;
+                                padding-top:0.75rem; border-top:1px solid #fce7f3;">
+                                <span style="font-family:'Cormorant Garamond',serif;
+                                    font-size:1.2rem; font-weight:500; color:#be185d;">
+                                    @item.Price.ToString("N0")₺
+                                </span>
+
+                                <!-- Sepete Ekle -->
+                                <form asp-controller="Cart" asp-action="Add" method="post">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="productId" value="@item.ProductId" />
+                                    <input type="hidden" name="name" value="@item.Name" />
+                                    <input type="hidden" name="price" value="@item.Price" />
+                                    <input type="hidden" name="imageUrl" value="@item.ImageUrl" />
+                                    <input type="hidden" name="category" value="@item.Category" />
+                                    <button type="submit"
+                                            style="padding:0.48rem 1rem; border-radius:9999px;
+                                        background:linear-gradient(135deg,#f472b6,#e11d48);
+                                        color:white; border:none; cursor:pointer;
+                                        font-size:0.71rem; font-weight:600;
+                                        letter-spacing:0.06em; white-space:nowrap;
+                                        font-family:'Montserrat',sans-serif;
+                                        transition:opacity 0.2s;"
+                                            onmouseover="this.style.opacity='0.85'"
+                                            onmouseout="this.style.opacity='1'">
+                                        🛒 Sepete
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <!-- Alışverişe Devam -->
+            <div style="text-align:center; margin-top:2.5rem;">
+                <a asp-controller="Collections" asp-action="Index"
+                   style="display:inline-flex; align-items:center; gap:0.4rem;
+                    font-size:0.78rem; color:#f43f7a; font-weight:400;
+                    text-decoration:none; border-bottom:1px solid #fda4af;
+                    padding-bottom:1px;">
+                    ‹ Alışverişe Devam Et
+                </a>
+            </div>
+        }
+    </div>
+</div>

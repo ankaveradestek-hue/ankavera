@@ -1,0 +1,248 @@
+﻿@model List<ANKAVERA_İÇ_GİYİM.Models.Product>
+@{
+    ViewData["Title"] = "Ürün Yönetimi";
+    Layout = "_Layout";
+    var cats = ViewData["Categories"] as List<string> ?? new();
+    var sel = ViewData["Category"]?.ToString() ?? "";
+    var srch = ViewData["Search"]?.ToString() ?? "";
+}
+
+<div style="min-height:calc(100vh - 70px);background:#fff5f7;padding:2.5rem 1rem;">
+    <div style="max-width:1200px;margin:0 auto;">
+
+        <!-- Başlık -->
+        <div style="display:flex;align-items:center;justify-content:space-between;
+            flex-wrap:wrap;gap:1rem;margin-bottom:2rem;">
+            <div>
+                <p style="font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;
+                    color:#f43f7a;font-weight:500;margin-bottom:.3rem;">
+                    ✦ Yönetim ✦
+                </p>
+                <h1 style="font-family:'Cormorant Garamond',serif;font-size:2.25rem;
+                    font-weight:300;color:#881337;">
+                    Ürün Yönetimi
+                </h1>
+            </div>
+            <a href="/Admin/AddProduct"
+               style="display:inline-flex;align-items:center;gap:.5rem;
+                padding:.75rem 1.5rem;border-radius:9999px;
+                background:linear-gradient(135deg,#f472b6,#e11d48,#be185d);
+                color:white;font-size:.8rem;font-weight:600;
+                letter-spacing:.08em;text-decoration:none;
+                box-shadow:0 4px 15px rgba(225,29,72,.3);">
+                ＋ Yeni Ürün Ekle
+            </a>
+        </div>
+
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div style="background:#f0fdf4;border-left:3px solid #22c55e;
+                border-radius:.75rem;padding:.85rem 1rem;
+                margin-bottom:1.5rem;color:#15803d;font-size:.82rem;">
+                @TempData["SuccessMessage"]
+            </div>
+        }
+
+        <!-- Filtre & Arama -->
+        <div style="background:white;border-radius:1.25rem;padding:1.25rem 1.5rem;
+            box-shadow:0 4px 18px rgba(225,29,72,.07);margin-bottom:1.5rem;">
+            <form method="get" action="/Admin/Products"
+                  style="display:flex;gap:.75rem;flex-wrap:wrap;align-items:center;">
+
+                <div style="position:relative;flex:1;min-width:200px;">
+                    <span style="position:absolute;left:12px;top:50%;
+                        transform:translateY(-50%);line-height:0;pointer-events:none;">
+                        <svg width="15" height="15" fill="none" stroke="#f9a8d4"
+                             stroke-width="1.8" viewBox="0 0 24 24">
+                            <circle cx="11" cy="11" r="8" />
+                            <path d="m21 21-4.35-4.35" />
+                        </svg>
+                    </span>
+                    <input name="search"
+                           value="@srch"
+                           placeholder="Ürün ara..."
+                           style="width:100%;padding:.65rem 1rem .65rem 2.5rem;
+                    border:1.5px solid #fce7f3;border-radius:.75rem;
+                    font-size:.82rem;color:#4a1942;outline:none;
+                    font-family:'Montserrat',sans-serif;background:white;"
+                           onfocus="this.style.borderColor='#f43f7a'"
+                           onblur="this.style.borderColor='#fce7f3'" />
+                </div>
+
+                <select name="category"
+                        style="padding:.65rem 1rem;border:1.5px solid #fce7f3;
+                    border-radius:.75rem;font-size:.82rem;color:#4a1942;
+                    outline:none;font-family:'Montserrat',sans-serif;
+                    background:white;cursor:pointer;min-width:140px;">
+                    <option value="">Tüm Kategoriler</option>
+                    @foreach (var c in cats)
+                    {
+                        <option value="@c" @(sel == c ? "selected" : "")>@c</option>
+                    }
+                </select>
+
+                <button type="submit"
+                        style="padding:.65rem 1.25rem;border-radius:.75rem;
+                    background:linear-gradient(135deg,#f472b6,#e11d48);
+                    color:white;border:none;cursor:pointer;font-size:.8rem;
+                    font-weight:600;font-family:'Montserrat',sans-serif;">
+                    Ara
+                </button>
+
+                @if (!string.IsNullOrEmpty(srch) || !string.IsNullOrEmpty(sel))
+                {
+                    <a href="/Admin/Products"
+                       style="padding:.65rem 1rem;border-radius:.75rem;
+                        border:1.5px solid #fce7f3;background:white;
+                        color:#be7094;font-size:.78rem;text-decoration:none;">
+                        Temizle
+                    </a>
+                }
+            </form>
+        </div>
+
+        <!-- Ürün Sayısı -->
+        <p style="font-size:.78rem;color:#d4a0b4;font-weight:300;margin-bottom:1rem;">
+            @Model.Count ürün listeleniyor
+        </p>
+
+        <!-- Ürün Grid -->
+        <div style="display:grid;
+            grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+            gap:1.25rem;">
+
+            @foreach (var p in Model)
+            {
+                <div style="background:white;border-radius:1.5rem;overflow:hidden;
+                    box-shadow:0 4px 18px rgba(225,29,72,.07);
+                    opacity:@(p.IsActive ? "1" : "0.6");
+                    transition:transform .3s,box-shadow .3s;"
+                     onmouseover="this.style.transform='translateY(-5px)';
+                    this.style.boxShadow='0 15px 40px rgba(197,48,89,.15)'"
+                     onmouseout="this.style.transform='translateY(0)';
+                    this.style.boxShadow='0 4px 18px rgba(225,29,72,.07)'">
+
+                    <!-- Görsel -->
+                    <div style="position:relative;aspect-ratio:4/3;overflow:hidden;
+                        background:#fce7f3;">
+                        <img src="@p.ImageUrl"
+                             alt="@p.Name"
+                             style="width:100%;height:100%;object-fit:cover;"
+                             onerror="this.src='https://images.unsplash.com/photo-1617922001439-4a2e6562f328?w=400'" />
+
+                        <!-- Durum Badge -->
+                        <span style="position:absolute;top:.6rem;left:.6rem;
+                            padding:.2rem .65rem;border-radius:9999px;
+                            font-size:.65rem;font-weight:700;color:white;
+                            background:@(p.IsActive
+                                                                    ? "linear-gradient(135deg,#22c55e,#16a34a)"
+                                                                    : "linear-gradient(135deg,#9ca3af,#6b7280)");">
+                            @(p.IsActive ? "Aktif" : "Pasif")
+                        </span>
+
+                        @if (!string.IsNullOrEmpty(p.Badge))
+                        {
+                            <span style="position:absolute;top:.6rem;right:.6rem;
+                                padding:.2rem .65rem;border-radius:9999px;
+                                font-size:.65rem;font-weight:700;color:white;
+                                background:linear-gradient(135deg,#f472b6,#e11d48);">
+                                @p.Badge
+                            </span>
+                        }
+                    </div>
+
+                    <!-- Bilgi -->
+                    <div style="padding:1rem 1.1rem;">
+                        <p style="font-size:.65rem;color:#f43f7a;text-transform:uppercase;
+                            letter-spacing:.1em;font-weight:500;margin-bottom:.25rem;">
+                            @p.CategoryName
+                        </p>
+                        <h3 style="font-family:'Cormorant Garamond',serif;font-size:1rem;
+                            font-weight:400;color:#881337;margin-bottom:.3rem;
+                            white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                            @p.Name
+                        </h3>
+                        <div style="display:flex;align-items:center;
+                            justify-content:space-between;margin-bottom:.75rem;">
+                            <span style="font-family:'Cormorant Garamond',serif;
+                                font-size:1.15rem;font-weight:500;color:#be185d;">
+                                @p.Price.ToString("N0")₺
+                            </span>
+                            <span style="font-size:.7rem;color:#be7094;font-weight:300;">
+                                Stok: @p.StockCount
+                            </span>
+                        </div>
+
+                        <!-- İşlem Butonları -->
+                        <div style="display:flex;gap:.5rem;">
+
+                            <!-- Düzenle -->
+                            <a href="/Admin/EditProduct/@p.Id"
+                               style="flex:1;text-align:center;padding:.5rem;
+                                border-radius:.65rem;
+                                border:1.5px solid #fce7f3;background:white;
+                                font-size:.72rem;color:#881337;font-weight:500;
+                                text-decoration:none;transition:all .2s;"
+                               onmouseover="this.style.background='#fff5f7'"
+                               onmouseout="this.style.background='white'">
+                                ✏️ Düzenle
+                            </a>
+
+                            <!-- Aktif/Pasif -->
+                            <form method="post" action="/Admin/ToggleProduct">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@p.Id" />
+                                <button type="submit"
+                                        title="@(p.IsActive ? "Pasif yap" : "Aktif et")"
+                                        style="padding:.5rem .75rem;border-radius:.65rem;
+                                    border:1.5px solid #fce7f3;background:white;
+                                    font-size:.75rem;cursor:pointer;
+                                    transition:all .2s;"
+                                        onmouseover="this.style.background='#fff5f7'"
+                                        onmouseout="this.style.background='white'">
+                                    @(p.IsActive ? "⏸" : "▶️")
+                                </button>
+                            </form>
+
+                            <!-- Sil -->
+                            <form method="post" action="/Admin/DeleteProduct">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@p.Id" />
+                                <button type="submit"
+                                        onclick="return confirm('@p.Name silinecek, emin misiniz?')"
+                                        style="padding:.5rem .75rem;border-radius:.65rem;
+                                    border:1.5px solid #fecdd3;background:white;
+                                    font-size:.75rem;cursor:pointer;color:#e11d48;
+                                    transition:all .2s;"
+                                        onmouseover="this.style.background='#fff1f2'"
+                                        onmouseout="this.style.background='white'">
+                                    🗑
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        @if (!Model.Any())
+        {
+            <div style="text-align:center;padding:4rem 2rem;background:white;
+                border-radius:1.5rem;box-shadow:0 4px 18px rgba(225,29,72,.07);">
+                <div style="font-size:3rem;margin-bottom:1rem;">📦</div>
+                <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.75rem;
+                    font-weight:300;color:#881337;margin-bottom:.75rem;">
+                    Ürün Bulunamadı
+                </h2>
+                <a href="/Admin/AddProduct"
+                   style="display:inline-block;padding:.85rem 2rem;
+                    background:linear-gradient(135deg,#f472b6,#e11d48);
+                    color:white;border-radius:9999px;font-size:.8rem;
+                    font-weight:600;text-decoration:none;letter-spacing:.08em;">
+                    ＋ İlk Ürünü Ekle
+                </a>
+            </div>
+        }
+
+    </div>
+</div>

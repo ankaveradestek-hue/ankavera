@@ -1,0 +1,185 @@
+﻿@model List<ANKAVERA_İÇ_GİYİM.Models.Product>
+@{
+    ViewData["Title"] = "Koleksiyonlar";
+    Layout = "_Layout";
+    var sel = ViewData["SelectedCategory"]?.ToString() ?? "Tümü";
+    var cats = ViewData["AllCategories"] as List<string> ?? new();
+}
+
+<div style="min-height:calc(100vh - 70px);background:#fff5f7;padding:3rem 1rem;">
+    <div style="max-width:1200px;margin:0 auto;">
+
+        <!-- Başlık -->
+        <div style="text-align:center;margin-bottom:2.5rem;">
+            <p style="color:#f43f7a;font-size:.72rem;letter-spacing:.22em;
+                text-transform:uppercase;font-weight:500;margin-bottom:.6rem;">
+                ✦ Ankavera ✦
+            </p>
+            <h1 style="font-family:'Cormorant Garamond',serif;font-size:2.75rem;
+                font-weight:300;color:#881337;letter-spacing:.04em;margin-bottom:.5rem;">
+                Koleksiyonlarımız
+            </h1>
+            <div style="width:2.5rem;height:1px;margin:.75rem auto;
+                background:linear-gradient(90deg,transparent,#f43f7a,transparent);">
+            </div>
+        </div>
+
+        <!-- Filtreler -->
+        <div style="display:flex;flex-wrap:wrap;gap:.6rem;
+            justify-content:center;margin-bottom:2.5rem;">
+
+            <a href="/Collections"
+               style="padding:.5rem 1.25rem;border-radius:9999px;font-size:.75rem;
+                font-weight:500;letter-spacing:.06em;text-decoration:none;
+                transition:all .25s;
+                background:@(sel == "Tümü"
+                                          ? "linear-gradient(135deg,#f472b6,#e11d48)"
+                                          : "white");
+                color:@(sel == "Tümü" ? "white" : "#be7094");
+                border:1.5px solid @(sel == "Tümü" ? "transparent" : "#fce7f3");
+                box-shadow:@(sel == "Tümü"
+                                          ? "0 4px 12px rgba(225,29,72,.3)"
+                                          : "none");">
+                Tümü
+            </a>
+
+            @foreach (var cat in cats)
+            {
+                <a href="/Collections?category=@Uri.EscapeDataString(cat)"
+                   style="padding:.5rem 1.25rem;border-radius:9999px;font-size:.75rem;
+                    font-weight:500;letter-spacing:.06em;text-decoration:none;
+                    transition:all .25s;
+                    background:@(sel == cat
+                                                  ? "linear-gradient(135deg,#f472b6,#e11d48)"
+                                                  : "white");
+                    color:@(sel == cat ? "white" : "#be7094");
+                    border:1.5px solid @(sel == cat ? "transparent" : "#fce7f3");
+                    box-shadow:@(sel == cat
+                                                  ? "0 4px 12px rgba(225,29,72,.3)"
+                                                  : "none");">
+                    @cat
+                </a>
+            }
+        </div>
+
+        <!-- Sayı -->
+        <p style="text-align:center;font-size:.78rem;color:#d4a0b4;
+            font-weight:300;margin-bottom:1.5rem;">
+            @Model.Count ürün
+        </p>
+
+        <!-- Grid -->
+        <div style="display:grid;
+            grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
+            gap:1.5rem;">
+
+            @foreach (var p in Model)
+            {
+                <article style="background:white;border-radius:1.5rem;overflow:hidden;
+                    box-shadow:0 4px 18px rgba(225,29,72,.07);
+                    transition:transform .35s,box-shadow .35s;"
+                         onmouseover="this.style.transform='translateY(-8px)';
+                    this.style.boxShadow='0 20px 50px rgba(197,48,89,.18)'"
+                         onmouseout="this.style.transform='translateY(0)';
+                    this.style.boxShadow='0 4px 18px rgba(225,29,72,.07)'">
+
+                    <!-- Görsel -->
+                    <div style="position:relative;aspect-ratio:3/4;overflow:hidden;
+                        background:#fce7f3;">
+                        <img src="@p.ImageUrl"
+                             alt="@p.Name"
+                             style="width:100%;height:100%;object-fit:cover;
+                        transition:transform .6s ease;"
+                             onmouseover="this.style.transform='scale(1.07)'"
+                             onmouseout="this.style.transform='scale(1)'"
+                             onerror="this.src='https://images.unsplash.com/photo-1617922001439-4a2e6562f328?w=400'" />
+
+                        @if (!string.IsNullOrEmpty(p.Badge))
+                        {
+                            <span style="position:absolute;top:.75rem;left:.75rem;
+                                padding:.25rem .75rem;border-radius:9999px;
+                                font-size:.68rem;font-weight:700;color:white;
+                                background:@(p.IsNew
+                                                                                ? "linear-gradient(135deg,#f472b6,#e11d48)"
+                                                                                : "linear-gradient(135deg,#fb923c,#e11d48)");">
+                                @p.Badge
+                            </span>
+                        }
+
+                        <!-- Hover Overlay -->
+                        <div class="p-overlay"
+                             style="position:absolute;inset:0;
+                            background:linear-gradient(to top,rgba(61,26,42,.7),transparent 55%);
+                            display:flex;align-items:flex-end;justify-content:center;
+                            padding:1rem;gap:.5rem;
+                            opacity:0;transition:opacity .35s;">
+
+                            <form method="post" action="/Cart/Add" style="flex:1;">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="productId" value="@p.Id" />
+                                <input type="hidden" name="name" value="@p.Name" />
+                                <input type="hidden" name="price" value="@p.Price" />
+                                <input type="hidden" name="imageUrl" value="@p.ImageUrl" />
+                                <input type="hidden" name="category" value="@p.CategoryName" />
+                                <button type="submit"
+                                        style="width:100%;padding:.65rem .5rem;
+                                    background:linear-gradient(135deg,#f472b6,#e11d48);
+                                    color:white;border:none;border-radius:9999px;
+                                    font-size:.72rem;font-weight:600;
+                                    letter-spacing:.06em;cursor:pointer;
+                                    font-family:'Montserrat',sans-serif;">
+                                    🛒 Sepete Ekle
+                                </button>
+                            </form>
+
+                            <form method="post" action="/Favorite/Toggle">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="productId" value="@p.Id" />
+                                <input type="hidden" name="name" value="@p.Name" />
+                                <input type="hidden" name="price" value="@p.Price" />
+                                <input type="hidden" name="imageUrl" value="@p.ImageUrl" />
+                                <input type="hidden" name="category" value="@p.CategoryName" />
+                                <button type="submit"
+                                        style="width:40px;height:38px;background:white;
+                                    border:none;border-radius:9999px;cursor:pointer;
+                                    display:flex;align-items:center;
+                                    justify-content:center;font-size:1rem;
+                                    flex-shrink:0;">
+                                    🤍
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Bilgi -->
+                    <div style="padding:1.1rem 1.25rem 1.25rem;">
+                        <p style="font-size:.67rem;color:#f43f7a;text-transform:uppercase;
+                            letter-spacing:.12em;font-weight:500;margin-bottom:.3rem;">
+                            @p.CategoryName
+                        </p>
+                        <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;
+                            font-weight:400;color:#881337;margin-bottom:.75rem;
+                            line-height:1.3;">
+                            @p.Name
+                        </h3>
+                        <div style="display:flex;align-items:center;
+                            justify-content:space-between;
+                            padding-top:.75rem;border-top:1px solid #fce7f3;">
+                            <span style="font-family:'Cormorant Garamond',serif;
+                                font-size:1.2rem;font-weight:500;color:#be185d;">
+                                @p.Price.ToString("N0")₺
+                            </span>
+                        </div>
+                    </div>
+                </article>
+            }
+        </div>
+    </div>
+</div>
+
+
+<style>
+    article:hover .p-overlay {
+        opacity: 1 !important;
+    }
+</style>

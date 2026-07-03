@@ -1,0 +1,87 @@
+﻿@{
+    ViewData["Title"] = "E-posta Onayı";
+    Layout = "_Layout";
+    bool success = (bool)(ViewData["Success"] ?? false);
+    string name = ViewData["FullName"]?.ToString() ?? "";
+}
+
+<div style="min-height:calc(100vh - 70px);display:flex;align-items:center;
+    justify-content:center;padding:3rem 1rem;
+    background:linear-gradient(145deg,#fff5f7,#fce7f3,#fff0f5);">
+
+    <div style="width:100%;max-width:440px;">
+        <div style="background:white;border-radius:1.75rem;overflow:hidden;
+            box-shadow:0 25px 60px rgba(225,29,72,.12);text-align:center;
+            padding:3rem 2rem;">
+
+            @if (success)
+            {
+                <!-- Başarılı -->
+                <div style="width:80px;height:80px;border-radius:50%;
+                    background:linear-gradient(135deg,#22c55e,#16a34a);
+                    display:flex;align-items:center;justify-content:center;
+                    margin:0 auto 1.5rem;font-size:2.25rem;">
+                    ✓
+                </div>
+                <h1 style="font-family:'Cormorant Garamond',serif;font-size:2rem;
+                    font-weight:300;color:#881337;margin:0 0 .5rem;">
+                    E-posta Onaylandı!
+                </h1>
+                <p style="color:#d4789a;font-size:.82rem;font-weight:300;margin:0 0 1rem;">
+                    Hoş geldiniz, @name 🌸
+                </p>
+                <div style="width:2.5rem;height:1px;margin:.75rem auto 1.5rem;
+                    background:linear-gradient(90deg,transparent,#f43f7a,transparent);">
+                </div>
+                <p style="font-size:.88rem;color:#7c3f60;font-weight:300;
+                    line-height:1.7;margin:0 0 2rem;">
+                    E-posta adresiniz başarıyla doğrulandı.
+                    Artık Ankavera'nın tüm özelliklerinden
+                    yararlanabilirsiniz.
+                </p>
+                <a href="/Account/Login"
+                   style="display:block;padding:.9rem;border-radius:9999px;
+                    background:linear-gradient(135deg,#f472b6,#e11d48,#be185d);
+                    color:white;font-size:.82rem;font-weight:700;
+                    letter-spacing:.15em;text-transform:uppercase;
+                    text-decoration:none;
+                    box-shadow:0 6px 20px rgba(225,29,72,.35);
+                    margin-bottom:.75rem;">
+                    Giriş Yap
+                </a>
+                <a href="/Collections"
+                   style="display:block;font-size:.78rem;color:#f43f7a;
+                    font-weight:400;text-decoration:none;">
+                    Koleksiyonları Keşfet →
+                </a>
+            }
+            else
+            {
+                <!-- Başarısız -->
+                <div style="width:80px;height:80px;border-radius:50%;
+                    background:linear-gradient(135deg,#f87171,#e11d48);
+                    display:flex;align-items:center;justify-content:center;
+                    margin:0 auto 1.5rem;font-size:2.25rem;color:white;">
+                    ✕
+                </div>
+                <h1 style="font-family:'Cormorant Garamond',serif;font-size:2rem;
+                    font-weight:300;color:#881337;margin:0 0 1rem;">
+                    Link Geçersiz
+                </h1>
+                <p style="font-size:.88rem;color:#7c3f60;font-weight:300;
+                    line-height:1.7;margin:0 0 2rem;">
+                    Onay linkinizin süresi dolmuş veya geçersiz.
+                    Lütfen yeni bir onay e-postası talep edin.
+                </p>
+                <a href="/Account/Login"
+                   style="display:block;padding:.9rem;border-radius:9999px;
+                    background:linear-gradient(135deg,#f472b6,#e11d48);
+                    color:white;font-size:.82rem;font-weight:700;
+                    letter-spacing:.15em;text-transform:uppercase;
+                    text-decoration:none;margin-bottom:.75rem;">
+                    Giriş Sayfasına Git
+                </a>
+            }
+        </div>
+    </div>
+</div>

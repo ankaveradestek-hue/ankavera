@@ -1,0 +1,121 @@
+﻿@{
+    ViewData["Title"] = "E-posta Onayı";
+    Layout = "_Layout";
+    var email = ViewData["Email"]?.ToString() ?? "";
+}
+
+<div style="min-height:calc(100vh - 70px);display:flex;align-items:center;
+    justify-content:center;padding:3rem 1rem;
+    background:linear-gradient(145deg,#fff5f7,#fce7f3,#fff0f5);">
+
+    <div style="width:100%;max-width:480px;">
+        <div style="background:white;border-radius:1.75rem;overflow:hidden;
+            box-shadow:0 25px 60px rgba(225,29,72,.12);text-align:center;">
+
+            <!-- Header -->
+            <div style="padding:2.5rem 2rem 1.5rem;
+                background:linear-gradient(180deg,#fff5f7,white);">
+                <div style="width:72px;height:72px;border-radius:50%;
+                    background:linear-gradient(135deg,#fce7f3,#fda4af);
+                    display:flex;align-items:center;justify-content:center;
+                    margin:0 auto 1.25rem;font-size:2rem;">
+                    📧
+                </div>
+                <h1 style="font-family:'Cormorant Garamond',serif;font-size:1.9rem;
+                    font-weight:300;color:#881337;margin:0 0 .4rem;">
+                    E-postanızı Onaylayın
+                </h1>
+                <p style="color:#d4789a;font-size:.82rem;font-weight:300;margin:0;">
+                    Neredeyse hazırsınız!
+                </p>
+                <div style="width:2.5rem;height:1px;margin:.9rem auto 0;
+                    background:linear-gradient(90deg,transparent,#f43f7a,transparent);">
+                </div>
+            </div>
+
+            <!-- İçerik -->
+            <div style="padding:1.5rem 2rem 2.5rem;">
+
+                @if (TempData["ResendSuccess"] != null)
+                {
+                    <div style="background:#f0fdf4;border-left:3px solid #22c55e;
+                        border-radius:.75rem;padding:.85rem 1rem;
+                        margin-bottom:1.25rem;color:#15803d;font-size:.82rem;">
+                        ✓ Onay e-postası tekrar gönderildi!
+                    </div>
+                }
+
+                @if (TempData["ResendError"] != null)
+                {
+                    <div style="background:#fff1f2;border-left:3px solid #e11d48;
+                        border-radius:.75rem;padding:.85rem 1rem;
+                        margin-bottom:1.25rem;color:#be123c;font-size:.82rem;">
+                        ⚠ Mail gönderilemedi. Lütfen tekrar deneyin.
+                    </div>
+                }
+
+                <p style="font-size:.88rem;color:#7c3f60;font-weight:300;
+                    line-height:1.7;margin:0 0 .75rem;">
+                    <strong style="color:#881337;">@email</strong>
+                    adresine bir onay e-postası gönderdik.
+                </p>
+
+                <p style="font-size:.82rem;color:#be7094;font-weight:300;
+                    line-height:1.7;margin:0 0 2rem;">
+                    Lütfen gelen kutunuzu (ve spam klasörünü) kontrol edin.
+                    E-postadaki <strong style="color:#e11d48;">
+                    "E-postamı Onayla"
+                </strong> butonuna tıklayın.
+            </p>
+
+            <!-- Adımlar -->
+            <div style="background:#fff5f7;border-radius:1rem;
+                padding:1.25rem;margin-bottom:1.75rem;text-align:left;">
+                @foreach (var step in new[]{
+                        ("1","Gelen kutunuzu açın"),
+                        ("2","Ankavera'dan gelen e-postayı bulun"),
+                        ("3","\"E-postamı Onayla\" butonuna tıklayın"),
+                        ("4","Giriş yapın ve alışverişe başlayın! 🛍️"),
+                    })
+                {
+                    <div style="display:flex;align-items:center;gap:.75rem;
+                        @(step.Item1 != "4" ? "margin-bottom:.75rem;" : "")">
+                        <span style="width:24px;height:24px;border-radius:50%;
+                            background:linear-gradient(135deg,#f472b6,#e11d48);
+                            color:white;font-size:.7rem;font-weight:700;
+                            display:flex;align-items:center;
+                            justify-content:center;flex-shrink:0;">
+                            @step.Item1
+                        </span>
+                        <span style="font-size:.8rem;color:#7c3f60;font-weight:300;">
+                            @step.Item2
+                        </span>
+                    </div>
+                }
+            </div>
+
+            <!-- Tekrar Gönder -->
+            <form method="post" action="/Account/ResendConfirmation">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="email" value="@email" />
+                <button type="submit"
+                        style="width:100%;padding:.85rem;border:1.5px solid #fce7f3;
+                    background:white;border-radius:9999px;
+                    font-size:.8rem;font-weight:500;color:#881337;
+                    cursor:pointer;font-family:'Montserrat',sans-serif;
+                    transition:all .25s;margin-bottom:.75rem;"
+                        onmouseover="this.style.background='#fff5f7'"
+                        onmouseout="this.style.background='white'">
+                    📨 Onay E-postasını Tekrar Gönder
+                </button>
+            </form>
+
+            <a href="/Account/Login"
+               style="display:block;text-align:center;font-size:.78rem;
+                color:#f43f7a;font-weight:400;text-decoration:none;">
+                Zaten onayladım → Giriş Yap
+            </a>
+        </div>
+    </div>
+</div>
+</div>

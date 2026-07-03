@@ -1,0 +1,189 @@
+﻿@model List<ANKAVERA_İÇ_GİYİM.Models.AdminUserViewModel>
+@{
+    ViewData["Title"] = "Kullanıcı Yönetimi";
+    Layout = "_AdminLayout";
+}
+
+<!-- Başlık -->
+<div class="flex items-center justify-between mb-8">
+    <div>
+        <h1 class="font-serif text-2xl font-light text-rose-900">Kullanıcı Yönetimi</h1>
+        <p class="text-xs text-rose-400 font-light mt-1">
+            Toplam @Model.Count kullanıcı
+        </p>
+    </div>
+</div>
+
+<!-- Başarı / Hata Mesajı -->
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="mb-6 bg-green-50 border border-green-200 border-l-4 border-l-green-500
+        rounded-xl px-5 py-4 flex items-center gap-3">
+        <svg class="w-4 h-4 text-green-500 flex-shrink-0" fill="none"
+             stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <polyline points="20 6 9 17 4 12" />
+        </svg>
+        <p class="text-green-700 text-sm font-light">@TempData["SuccessMessage"]</p>
+    </div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="mb-6 bg-red-50 border border-red-200 border-l-4 border-l-red-500
+        rounded-xl px-5 py-4 flex items-center gap-3">
+        <svg class="w-4 h-4 text-red-500 flex-shrink-0" fill="none"
+             stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="15" y1="9" x2="9" y2="15" />
+            <line x1="9" y1="9" x2="15" y2="15" />
+        </svg>
+        <p class="text-red-700 text-sm font-light">@TempData["ErrorMessage"]</p>
+    </div>
+}
+
+<!-- Kullanıcı Tablosu -->
+<div class="bg-white rounded-2xl shadow-sm border border-rose-50 overflow-hidden">
+    <div class="overflow-x-auto">
+        <table class="w-full">
+            <thead>
+                <tr class="bg-rose-50/60 border-b border-rose-100">
+                    <th class="text-left px-6 py-4 text-xs font-medium
+                    text-rose-400 tracking-widest uppercase">Kullanıcı</th>
+                    <th class="text-left px-6 py-4 text-xs font-medium
+                    text-rose-400 tracking-widest uppercase">E-posta</th>
+                    <th class="text-left px-6 py-4 text-xs font-medium
+                    text-rose-400 tracking-widest uppercase">Rol</th>
+                    <th class="text-left px-6 py-4 text-xs font-medium
+                    text-rose-400 tracking-widest uppercase">Kayıt</th>
+                    <th class="text-left px-6 py-4 text-xs font-medium
+                    text-rose-400 tracking-widest uppercase">Durum</th>
+                    <th class="text-right px-6 py-4 text-xs font-medium
+                    text-rose-400 tracking-widest uppercase">İşlemler</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-rose-50">
+                @foreach (var user in Model)
+                {
+                    <tr class="hover:bg-rose-50/20 transition-colors group">
+
+                        <!-- Avatar + İsim -->
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-9 h-9 rounded-full flex items-center justify-center
+                                    text-white text-sm font-semibold flex-shrink-0"
+                                     style="background: @(user.Roles.Contains("Admin")
+                                                                              ? "linear-gradient(135deg,#fb923c,#e11d48)"
+                                                                              : "linear-gradient(135deg,#f7698a,#c93059)")">
+                                    @(user.FullName.Length > 0
+                                        ? user.FullName.Substring(0, 1).ToUpper()
+                                        : "?")
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium text-rose-900">
+                                        @user.FullName
+                                    </p>
+                                    <p class="text-xs text-rose-400 font-light">
+                                        #@user.Id.Substring(0, 8)...
+                                    </p>
+                                </div>
+                            </div>
+                        </td>
+
+                        <!-- E-posta -->
+                        <td class="px-6 py-4 text-sm text-rose-600 font-light">
+                            @user.Email
+                        </td>
+
+                        <!-- Rol Badge -->
+                        <td class="px-6 py-4">
+                            @foreach (var role in user.Roles)
+                            {
+                                <span class="inline-flex items-center px-3 py-1 rounded-full
+                                    text-xs font-medium mr-1
+                                    @(role == "Admin"
+                                          ? "bg-orange-100 text-orange-700"
+                                          : "bg-rose-100 text-rose-700")">
+                                    @(role == "Admin" ? "👑 Admin" : "👤 Üye")
+                                </span>
+                            }
+                        </td>
+
+                        <!-- Tarih -->
+                        <td class="px-6 py-4 text-sm text-rose-400 font-light">
+                            @user.RegisteredAt.ToString("dd.MM.yyyy")
+                        </td>
+
+                        <!-- Durum -->
+                        <td class="px-6 py-4">
+                            @if (user.IsLocked)
+                            {
+                                <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full
+                                    text-xs font-medium bg-red-100 text-red-600">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+                                    Kilitli
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full
+                                    text-xs font-medium bg-green-100 text-green-600">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                                    Aktif
+                                </span>
+                            }
+                        </td>
+
+                        <!-- İşlemler -->
+                        <td class="px-6 py-4">
+                            <div class="flex items-center justify-end gap-2">
+
+                                <!-- Rol Değiştir -->
+                                <form asp-action="ToggleRole" asp-controller="Admin"
+                                      method="post" class="inline">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@user.Id" />
+                                    <button type="submit"
+                                            title="Rolü Değiştir"
+                                            onclick="return confirm('Bu kullanıcının rolü değiştirilecek. Onaylıyor musunuz?')"
+                                            class="w-8 h-8 rounded-lg flex items-center justify-center
+                                        text-purple-400 hover:bg-purple-50 hover:text-purple-600
+                                        transition-all border border-purple-100">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor"
+                                             stroke-width="2" viewBox="0 0 24 24">
+                                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                            <circle cx="9" cy="7" r="4" />
+                                            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                                            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                                        </svg>
+                                    </button>
+                                </form>
+
+                                <!-- Sil -->
+                                <form asp-action="DeleteUser" asp-controller="Admin"
+                                      method="post" class="inline">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@user.Id" />
+                                    <button type="submit"
+                                            title="Kullanıcıyı Sil"
+                                            onclick="return confirm('@user.FullName adlı kullanıcıyı silmek istediğinizden emin misiniz?')"
+                                            class="w-8 h-8 rounded-lg flex items-center justify-center
+                                        text-red-400 hover:bg-red-50 hover:text-red-600
+                                        transition-all border border-red-100">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor"
+                                             stroke-width="2" viewBox="0 0 24 24">
+                                            <polyline points="3 6 5 6 21 6" />
+                                            <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+                                            <path d="M10 11v6" />
+                                            <path d="M14 11v6" />
+                                            <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
+                                        </svg>
+                                    </button>
+                                </form>
+
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

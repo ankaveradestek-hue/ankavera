@@ -1,0 +1,38 @@
+/* ── ANKAVERA Custom Utilities ── */
+
+/* line-clamp polyfill */
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Tailwind group-hover scale-108 (custom) */
+.group:hover .group-hover\:scale-108 {
+    transform: scale(1.08);
+}
+
+/* Scrollbar Özelleştirme */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #fff5f7;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #f7698a, #c93059);
+    border-radius: 10px;
+}
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(180deg, #c93059, #7e1938);
+    }
+
+/* Seçim rengi */
+::selection {
+    background: #f7698a;
+    color: white;
+}

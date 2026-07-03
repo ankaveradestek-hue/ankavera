@@ -1,0 +1,350 @@
+﻿@model ANKAVERA_İÇ_GİYİM.Models.RegisterViewModel
+@{
+    ViewData["Title"] = "Kayıt Ol";
+    Layout = "_Layout";
+}
+
+<div style="min-height:calc(100vh - 70px);
+    display:flex;align-items:center;justify-content:center;
+    padding:3rem 1rem;
+    background:linear-gradient(145deg,#fff5f7,#fce7f3,#fff0f5);">
+
+    <div style="width:100%;max-width:410px;">
+
+        <div style="background:white;border-radius:1.75rem;overflow:hidden;
+            box-shadow:0 25px 60px rgba(225,29,72,.12),0 8px 20px rgba(0,0,0,.05);">
+
+            <!-- Başlık -->
+            <div style="padding:2.25rem 2rem 1.25rem;text-align:center;
+                background:linear-gradient(180deg,#fff5f7,white);">
+                <img src="/images/WhatsApp Image 2026-06-21 at 21.07.51.jpeg"
+                     alt="Ankavera"
+                     style="height:50px;width:auto;object-fit:contain;border-radius:9px;
+                margin-bottom:1rem;
+                filter:drop-shadow(0 3px 10px rgba(225,29,72,.2));"
+                     onerror="this.style.display='none'" />
+                <h1 style="font-family:'Cormorant Garamond',serif;font-size:2rem;
+                    font-weight:300;color:#881337;letter-spacing:.04em;
+                    margin:0 0 .25rem;">
+                    Hesap Oluştur
+                </h1>
+                <p style="color:#d4789a;font-size:.78rem;font-weight:300;margin:0;">
+                    Lüks dünyamıza hoş geldiniz
+                </p>
+                <div style="width:2.5rem;height:1px;margin:.9rem auto 0;
+                    background:linear-gradient(90deg,transparent,#f43f7a,transparent);">
+                </div>
+            </div>
+
+            <!-- Form -->
+            <div style="padding:1.5rem 2rem 2.25rem;">
+
+                <!-- Hatalar -->
+                @if (ViewData.ModelState.ErrorCount > 0)
+                {
+                    <div style="background:#fff1f2;border:1px solid #fecdd3;
+                        border-left:3px solid #e11d48;border-radius:.75rem;
+                        padding:.8rem 1rem;margin-bottom:1.25rem;">
+                        @foreach (var ms in ViewData.ModelState.Values)
+                        {
+                            foreach (var err in ms.Errors)
+                            {
+                                <p style="color:#be123c;font-size:.78rem;
+                                    margin:0 0 .2rem;font-weight:400;">
+                                    ⚠ @err.ErrorMessage
+                                </p>
+                            }
+                        }
+                    </div>
+                }
+
+                <form method="post"
+                      action="/Account/Register">
+
+                    @Html.AntiForgeryToken()
+
+                    <!-- Ad Soyad -->
+                    <div style="margin-bottom:1rem;">
+                        <label style="display:block;font-size:.67rem;font-weight:700;
+                            letter-spacing:.14em;text-transform:uppercase;
+                            color:#9d4b7a;margin-bottom:.4rem;">
+                            Ad Soyad
+                        </label>
+                        <div style="position:relative;">
+                            <span style="position:absolute;left:12px;top:50%;
+                                transform:translateY(-50%);pointer-events:none;
+                                display:flex;align-items:center;">
+                                <svg width="15" height="15" fill="none" stroke="#f9a8d4"
+                                     stroke-width="1.8" viewBox="0 0 24 24">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                    <circle cx="12" cy="7" r="4" />
+                                </svg>
+                            </span>
+                            <input name="FullName"
+                                   type="text"
+                                   value="@Model.FullName"
+                                   placeholder="Adınızı ve soyadınızı giriniz"
+                                   required
+                                   style="width:100%;padding:.75rem 1rem .75rem 2.5rem;
+                            border:1.5px solid #fce7f3;border-radius:.8rem;
+                            font-size:.875rem;color:#4a1942;outline:none;
+                            font-family:'Montserrat',sans-serif;background:white;
+                            transition:border-color .25s,box-shadow .25s;"
+                                   onfocus="this.style.borderColor='#f43f7a';
+                            this.style.boxShadow='0 0 0 3px rgba(244,63,122,.1)'"
+                                   onblur="this.style.borderColor='#fce7f3';
+                            this.style.boxShadow='none'" />
+                        </div>
+                        @if (ViewData.ModelState["FullName"]?.Errors.Count > 0)
+                        {
+                            <p style="color:#e11d48;font-size:.71rem;margin:.25rem 0 0;">
+                                @ViewData.ModelState["FullName"]!.Errors[0].ErrorMessage
+                            </p>
+                        }
+                    </div>
+
+                    <!-- E-posta -->
+                    <div style="margin-bottom:1rem;">
+                        <label style="display:block;font-size:.67rem;font-weight:700;
+                            letter-spacing:.14em;text-transform:uppercase;
+                            color:#9d4b7a;margin-bottom:.4rem;">
+                            E-posta Adresi
+                        </label>
+                        <div style="position:relative;">
+                            <span style="position:absolute;left:12px;top:50%;
+                                transform:translateY(-50%);pointer-events:none;
+                                display:flex;align-items:center;">
+                                <svg width="15" height="15" fill="none" stroke="#f9a8d4"
+                                     stroke-width="1.8" viewBox="0 0 24 24">
+                                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                                    <polyline points="22,6 12,13 2,6" />
+                                </svg>
+                            </span>
+                            <input name="Email"
+                                   type="email"
+                                   value="@Model.Email"
+                                   placeholder="ornek@email.com"
+                                   required
+                                   style="width:100%;padding:.75rem 1rem .75rem 2.5rem;
+                            border:1.5px solid #fce7f3;border-radius:.8rem;
+                            font-size:.875rem;color:#4a1942;outline:none;
+                            font-family:'Montserrat',sans-serif;background:white;
+                            transition:border-color .25s,box-shadow .25s;"
+                                   onfocus="this.style.borderColor='#f43f7a';
+                            this.style.boxShadow='0 0 0 3px rgba(244,63,122,.1)'"
+                                   onblur="this.style.borderColor='#fce7f3';
+                            this.style.boxShadow='none'" />
+                        </div>
+                        @if (ViewData.ModelState["Email"]?.Errors.Count > 0)
+                        {
+                            <p style="color:#e11d48;font-size:.71rem;margin:.25rem 0 0;">
+                                @ViewData.ModelState["Email"]!.Errors[0].ErrorMessage
+                            </p>
+                        }
+                    </div>
+
+                    <!-- Şifre -->
+                    <div style="margin-bottom:1rem;">
+                        <label style="display:block;font-size:.67rem;font-weight:700;
+                            letter-spacing:.14em;text-transform:uppercase;
+                            color:#9d4b7a;margin-bottom:.4rem;">
+                            Şifre
+                        </label>
+                        <div style="position:relative;">
+                            <span style="position:absolute;left:12px;top:50%;
+                                transform:translateY(-50%);pointer-events:none;
+                                display:flex;align-items:center;">
+                                <svg width="15" height="15" fill="none" stroke="#f9a8d4"
+                                     stroke-width="1.8" viewBox="0 0 24 24">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" />
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                                </svg>
+                            </span>
+                            <input name="Password"
+                                   type="password"
+                                   id="pwd-r1"
+                                   placeholder="En az 6 karakter"
+                                   required
+                                   style="width:100%;padding:.75rem 2.8rem .75rem 2.5rem;
+                            border:1.5px solid #fce7f3;border-radius:.8rem;
+                            font-size:.875rem;color:#4a1942;outline:none;
+                            font-family:'Montserrat',sans-serif;background:white;
+                            transition:border-color .25s,box-shadow .25s;"
+                                   onfocus="this.style.borderColor='#f43f7a';
+                            this.style.boxShadow='0 0 0 3px rgba(244,63,122,.1)'"
+                                   onblur="this.style.borderColor='#fce7f3';
+                            this.style.boxShadow='none'" />
+                            <button type="button" tabindex="-1"
+                                    onclick="eyeT('pwd-r1','eye-r1')"
+                                    style="position:absolute;right:10px;top:50%;
+                                transform:translateY(-50%);background:none;
+                                border:none;cursor:pointer;padding:4px;
+                                color:#f9a8d4;display:flex;align-items:center;">
+                                <svg id="eye-r1" width="16" height="16" fill="none"
+                                     stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                    <circle cx="12" cy="12" r="3" />
+                                </svg>
+                            </button>
+                        </div>
+                        @if (ViewData.ModelState["Password"]?.Errors.Count > 0)
+                        {
+                            <p style="color:#e11d48;font-size:.71rem;margin:.25rem 0 0;">
+                                @ViewData.ModelState["Password"]!.Errors[0].ErrorMessage
+                            </p>
+                        }
+                    </div>
+
+                    <!-- Şifre Tekrar -->
+                    <div style="margin-bottom:1rem;">
+                        <label style="display:block;font-size:.67rem;font-weight:700;
+                            letter-spacing:.14em;text-transform:uppercase;
+                            color:#9d4b7a;margin-bottom:.4rem;">
+                            Şifre Tekrarı
+                        </label>
+                        <div style="position:relative;">
+                            <span style="position:absolute;left:12px;top:50%;
+                                transform:translateY(-50%);pointer-events:none;
+                                display:flex;align-items:center;">
+                                <svg width="15" height="15" fill="none" stroke="#f9a8d4"
+                                     stroke-width="1.8" viewBox="0 0 24 24">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" />
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                                </svg>
+                            </span>
+                            <input name="ConfirmPassword"
+                                   type="password"
+                                   id="pwd-r2"
+                                   placeholder="Şifrenizi tekrar giriniz"
+                                   required
+                                   style="width:100%;padding:.75rem 2.8rem .75rem 2.5rem;
+                            border:1.5px solid #fce7f3;border-radius:.8rem;
+                            font-size:.875rem;color:#4a1942;outline:none;
+                            font-family:'Montserrat',sans-serif;background:white;
+                            transition:border-color .25s,box-shadow .25s;"
+                                   onfocus="this.style.borderColor='#f43f7a';
+                            this.style.boxShadow='0 0 0 3px rgba(244,63,122,.1)'"
+                                   onblur="this.style.borderColor='#fce7f3';
+                            this.style.boxShadow='none'" />
+                            <button type="button" tabindex="-1"
+                                    onclick="eyeT('pwd-r2','eye-r2')"
+                                    style="position:absolute;right:10px;top:50%;
+                                transform:translateY(-50%);background:none;
+                                border:none;cursor:pointer;padding:4px;
+                                color:#f9a8d4;display:flex;align-items:center;">
+                                <svg id="eye-r2" width="16" height="16" fill="none"
+                                     stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                    <circle cx="12" cy="12" r="3" />
+                                </svg>
+                            </button>
+                        </div>
+                        @if (ViewData.ModelState["ConfirmPassword"]?.Errors.Count > 0)
+                        {
+                            <p style="color:#e11d48;font-size:.71rem;margin:.25rem 0 0;">
+                                @ViewData.ModelState["ConfirmPassword"]!.Errors[0].ErrorMessage
+                            </p>
+                        }
+                    </div>
+
+                    <!-- Koşullar -->
+                    <div style="margin-bottom:1.4rem;">
+                        <label style="display:flex;align-items:flex-start;
+                            gap:.55rem;cursor:pointer;">
+                            <input name="AcceptTerms"
+                                   type="checkbox"
+                                   value="true"
+                                   style="width:1rem;height:1rem;accent-color:#e11d48;
+                            cursor:pointer;flex-shrink:0;margin-top:2px;" />
+                            <span style="font-size:.76rem;color:#be7094;
+                                font-weight:300;line-height:1.55;">
+                                <a href="/Legal/Index/kullanim" target="_blank" rel="noopener"
+                                   style="color:#e11d48;text-decoration:underline;">
+                                    Kullanım Koşulları ve Üyelik Sözleşmesi</a>'ni,
+                                <a href="/Legal/Index/kvkk" target="_blank" rel="noopener"
+                                   style="color:#e11d48;text-decoration:underline;">
+                                    KVKK Aydınlatma Metni</a>'ni ve
+                                <a href="/Legal/Index/gizlilik" target="_blank" rel="noopener"
+                                   style="color:#e11d48;text-decoration:underline;">
+                                    Gizlilik ve Çerez Politikası</a>'nı
+                                okudum, kabul ediyorum.
+                            </span>
+                        </label>
+                        @if (ViewData.ModelState["AcceptTerms"]?.Errors.Count > 0)
+                        {
+                            <p style="color:#e11d48;font-size:.71rem;margin:.25rem 0 0;">
+                                @ViewData.ModelState["AcceptTerms"]!.Errors[0].ErrorMessage
+                            </p>
+                        }
+
+                        <!-- Opsiyonel: Ticari İleti Açık Rızası -->
+                        <label style="display:flex;align-items:flex-start;
+                            gap:.55rem;cursor:pointer;margin-top:.75rem;">
+                            <input name="AcceptMarketing"
+                                   type="checkbox"
+                                   value="true"
+                                   style="width:1rem;height:1rem;accent-color:#e11d48;
+                            cursor:pointer;flex-shrink:0;margin-top:2px;" />
+                            <span style="font-size:.74rem;color:#be7094;
+                                font-weight:300;line-height:1.5;">
+                                Kampanya, fırsat ve yeniliklerden e-posta ile haberdar olmak
+                                istiyorum. <span style="color:#d4a0b0;">(İsteğe bağlı — dilediğiniz
+                                zaman vazgeçebilirsiniz.)</span>
+                            </span>
+                        </label>
+                    </div>
+
+                    <!-- Kayıt Butonu -->
+                    <button type="submit"
+                            style="width:100%;padding:.9rem;border:none;cursor:pointer;
+                        background:linear-gradient(135deg,#f472b6,#e11d48,#be185d);
+                        color:white;font-size:.8rem;font-weight:700;
+                        letter-spacing:.2em;text-transform:uppercase;
+                        border-radius:9999px;font-family:'Montserrat',sans-serif;
+                        box-shadow:0 6px 20px rgba(225,29,72,.35);
+                        transition:all .3s;margin-bottom:1.25rem;"
+                            onmouseover="this.style.transform='translateY(-1px)'"
+                            onmouseout="this.style.transform='translateY(0)'">
+                        Hesabımı Oluştur
+                    </button>
+
+                    <!-- Ayraç -->
+                    <div style="position:relative;text-align:center;margin-bottom:1.1rem;">
+                        <div style="position:absolute;top:50%;left:0;right:0;height:1px;
+                            background:linear-gradient(90deg,transparent,#fce7f3,transparent);">
+                        </div>
+                        <span style="position:relative;background:white;padding:0 .75rem;
+                            font-size:.71rem;color:#d4a0b0;font-weight:300;">
+                            veya
+                        </span>
+                    </div>
+
+                    <p style="text-align:center;font-size:.8rem;color:#be7094;font-weight:300;">
+                        Zaten bir hesabınız var mı?
+                        <a href="/Account/Login"
+                           style="color:#e11d48;font-weight:600;text-decoration:underline;">
+                            Giriş Yapın
+                        </a>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function eyeT(id, eid) {
+            var i = document.getElementById(id);
+            var e = document.getElementById(eid);
+            if (!i || !e) return;
+            if (i.type === 'password') {
+                i.type = 'text';
+                e.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>';
+            } else {
+                i.type = 'password';
+                e.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+            }
+        }
+    </script>
+}

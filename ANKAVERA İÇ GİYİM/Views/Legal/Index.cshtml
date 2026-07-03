@@ -1,0 +1,630 @@
+@{
+    ViewData["Title"] = "Yasal Bilgiler";
+    Layout = "_Layout";
+    var activeDoc = (ViewData["ActiveDoc"] as string) ?? "mesafeli";
+
+    // Sekme tanımları: (anahtar, ikon, başlık)
+    var tabs = new (string Key, string Icon, string Title)[]
+    {
+        ("mesafeli",   "📜", "Mesafeli Satış Sözleşmesi"),
+        ("onbilgi",    "📋", "Ön Bilgilendirme Formu"),
+        ("kullanim",   "🤝", "Kullanım Koşulları & Üyelik"),
+        ("kvkk",       "🛡️", "KVKK Aydınlatma Metni"),
+        ("gizlilik",   "🍪", "Gizlilik & Çerez Politikası"),
+        ("iade",       "↩️", "İptal & İade Koşulları"),
+    };
+}
+
+<!-- ═══════════════════════════════════════════════
+     YASAL BİLGİLER — Glassmorphism Sekmeli Arayüz
+═══════════════════════════════════════════════ -->
+<style>
+    .legal-wrap {
+        position: relative;
+        min-height: 100vh;
+        padding: 4rem 1.5rem 5rem;
+        overflow: hidden;
+        background:
+            radial-gradient(1100px 500px at 12% -8%, rgba(244,63,122,0.14), transparent 60%),
+            radial-gradient(900px 480px at 92% 10%, rgba(190,24,93,0.12), transparent 60%),
+            linear-gradient(180deg, #fff5f7 0%, #ffeef3 45%, #fff5f7 100%);
+    }
+
+    /* Dekoratif ışık huzmeleri (subtle glow) */
+    .legal-glow {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(90px);
+        opacity: 0.5;
+        pointer-events: none;
+        z-index: 0;
+    }
+    .legal-glow.a { width: 340px; height: 340px; top: 8%; left: -60px;
+        background: radial-gradient(circle, rgba(244,114,182,0.55), transparent 70%); }
+    .legal-glow.b { width: 400px; height: 400px; bottom: 6%; right: -80px;
+        background: radial-gradient(circle, rgba(225,29,72,0.35), transparent 70%); }
+
+    .legal-inner { position: relative; z-index: 2; max-width: 1200px; margin: 0 auto; }
+
+    /* ── Başlık ── */
+    .legal-head { text-align: center; margin-bottom: 3rem; }
+    .legal-eyebrow {
+        color: #f43f7a; font-size: .72rem; letter-spacing: .25em;
+        text-transform: uppercase; font-weight: 600; margin-bottom: .85rem;
+    }
+    .legal-title {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: clamp(2.4rem, 6vw, 3.6rem); font-weight: 300;
+        color: #881337; letter-spacing: .04em;
+    }
+    .legal-title-line {
+        width: 3rem; height: 1px; margin: 1.15rem auto 1.15rem;
+        background: linear-gradient(90deg, transparent, #f43f7a, transparent);
+    }
+    .legal-sub {
+        color: #9d7a8a; font-weight: 300; font-size: .95rem;
+        max-width: 560px; margin: 0 auto; line-height: 1.7;
+    }
+
+    /* ── Layout: Sidebar + İçerik ── */
+    .legal-grid {
+        display: grid;
+        grid-template-columns: 300px 1fr;
+        gap: 1.75rem;
+        align-items: start;
+    }
+
+    /* ── Sidebar (glass) ── */
+    .legal-nav {
+        position: sticky; top: 90px;
+        background: rgba(255, 255, 255, 0.55);
+        backdrop-filter: blur(22px);
+        -webkit-backdrop-filter: blur(22px);
+        border: 1px solid rgba(255, 255, 255, 0.7);
+        border-radius: 1.5rem;
+        padding: 1rem;
+        box-shadow: 0 18px 50px rgba(197, 48, 89, 0.12),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    }
+    .legal-nav-label {
+        font-size: .64rem; font-weight: 700; letter-spacing: .2em;
+        text-transform: uppercase; color: #c05978;
+        padding: .35rem .75rem .75rem;
+    }
+    .legal-tab {
+        display: flex; align-items: center; gap: .7rem; width: 100%;
+        padding: .8rem .85rem; margin-bottom: .3rem;
+        border: 1px solid transparent; border-radius: .9rem;
+        background: transparent; cursor: pointer;
+        font-family: 'Montserrat', sans-serif; font-size: .8rem; font-weight: 500;
+        color: #7c3f60; text-align: left; letter-spacing: .01em;
+        transition: all .25s ease;
+    }
+    .legal-tab .ic {
+        font-size: 1.05rem; width: 1.6rem; text-align: center; flex-shrink: 0;
+        filter: drop-shadow(0 2px 4px rgba(225,29,72,.2));
+    }
+    .legal-tab:hover {
+        background: rgba(255, 255, 255, 0.7);
+        border-color: rgba(249, 168, 212, 0.5);
+        color: #881337;
+    }
+    .legal-tab.active {
+        background: linear-gradient(135deg, #f472b6, #e11d48, #be185d);
+        color: #fff; border-color: transparent;
+        box-shadow: 0 8px 22px rgba(225, 29, 72, 0.35);
+    }
+    .legal-tab.active .ic { filter: drop-shadow(0 2px 5px rgba(0,0,0,.25)); }
+
+    /* ── İçerik kartı (glass) ── */
+    .legal-card {
+        background: rgba(255, 255, 255, 0.62);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        border: 1px solid rgba(255, 255, 255, 0.75);
+        border-radius: 1.75rem;
+        box-shadow: 0 24px 70px rgba(197, 48, 89, 0.14),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+        overflow: hidden;
+    }
+    .legal-card-head {
+        padding: 1.85rem 2.25rem 1.35rem;
+        border-bottom: 1px solid rgba(244, 63, 122, 0.12);
+        background: linear-gradient(180deg, rgba(255,255,255,0.5), transparent);
+    }
+    .legal-card-head h2 {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 2rem; font-weight: 400; color: #881337; letter-spacing: .01em;
+    }
+    .legal-card-head .meta {
+        margin-top: .4rem; font-size: .72rem; color: #b07c92;
+        font-weight: 300; letter-spacing: .03em;
+    }
+
+    /* ── Kaydırılabilir metin gövdesi ── */
+    .legal-body {
+        max-height: 68vh;
+        overflow-y: auto;
+        padding: 1.75rem 2.25rem 2.25rem;
+        scrollbar-width: thin;
+        scrollbar-color: #f9a8d4 transparent;
+    }
+    .legal-body::-webkit-scrollbar { width: 8px; }
+    .legal-body::-webkit-scrollbar-track { background: transparent; }
+    .legal-body::-webkit-scrollbar-thumb {
+        background: linear-gradient(180deg, #f9a8d4, #e11d48);
+        border-radius: 9999px;
+    }
+
+    /* ── Metin tipografisi ── */
+    .legal-body h3 {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 1.35rem; font-weight: 600; color: #a3134a;
+        margin: 1.9rem 0 .7rem; letter-spacing: .01em;
+        display: flex; align-items: baseline; gap: .55rem;
+    }
+    .legal-body h3:first-child { margin-top: 0; }
+    .legal-body h3 .no {
+        font-family: 'Montserrat', sans-serif; font-size: .78rem; font-weight: 700;
+        color: #fff; background: linear-gradient(135deg, #f472b6, #be185d);
+        border-radius: .5rem; padding: .12rem .5rem; flex-shrink: 0;
+        box-shadow: 0 3px 10px rgba(225,29,72,.3);
+    }
+    .legal-body h4 {
+        font-size: .9rem; font-weight: 600; color: #881337;
+        margin: 1.15rem 0 .45rem; letter-spacing: .01em;
+    }
+    .legal-body p {
+        font-size: .86rem; color: #6d4257; font-weight: 300;
+        line-height: 1.85; margin-bottom: .85rem;
+    }
+    .legal-body ul { list-style: none; margin: 0 0 1rem; padding: 0; }
+    .legal-body ul li {
+        position: relative; padding-left: 1.4rem; margin-bottom: .55rem;
+        font-size: .86rem; color: #6d4257; font-weight: 300; line-height: 1.8;
+    }
+    .legal-body ul li::before {
+        content: '✦'; position: absolute; left: 0; top: .05rem;
+        color: #f43f7a; font-size: .72rem;
+    }
+    .legal-body strong { color: #881337; font-weight: 600; }
+    .legal-body a { color: #e11d48; text-decoration: none; border-bottom: 1px dashed #f9a8d4; }
+    .legal-body a:hover { color: #be185d; }
+
+    /* Placeholder vurgusu ([Ankavera] vb.) */
+    .ph {
+        background: rgba(244, 63, 122, 0.1); color: #be185d;
+        border: 1px dashed rgba(225, 29, 72, 0.35);
+        border-radius: .35rem; padding: 0 .3rem;
+        font-weight: 500; font-size: .82em; white-space: nowrap;
+    }
+
+    /* Bilgilendirme kutusu */
+    .legal-callout {
+        background: rgba(244, 63, 122, 0.07);
+        border: 1px solid rgba(244, 63, 122, 0.18);
+        border-left: 3px solid #e11d48;
+        border-radius: .85rem; padding: 1rem 1.15rem; margin: 1.15rem 0;
+    }
+    .legal-callout p { margin: 0; color: #a3134a; font-size: .82rem; }
+
+    /* Belge bilgi tablosu */
+    .legal-table { width: 100%; border-collapse: collapse; margin: .6rem 0 1.2rem; }
+    .legal-table td {
+        padding: .6rem .85rem; font-size: .82rem; color: #6d4257; font-weight: 300;
+        border: 1px solid rgba(244, 63, 122, 0.15); vertical-align: top; line-height: 1.6;
+    }
+    .legal-table td:first-child {
+        width: 38%; font-weight: 600; color: #881337;
+        background: rgba(255, 245, 247, 0.7);
+    }
+
+    /* Panel geçiş animasyonu */
+    .legal-panel { display: none; animation: legalFade .4s ease; }
+    .legal-panel.active { display: block; }
+    @@keyframes legalFade {
+        from { opacity: 0; transform: translateY(10px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Mobil sekme çubuğu (yatay) */
+    .legal-tabs-mobile { display: none; }
+
+    @@media (max-width: 900px) {
+        .legal-grid { grid-template-columns: 1fr; }
+        .legal-nav { display: none; }
+        .legal-tabs-mobile {
+            display: flex; gap: .5rem; overflow-x: auto; padding: .4rem .2rem 1rem;
+            margin-bottom: .25rem; scrollbar-width: none;
+        }
+        .legal-tabs-mobile::-webkit-scrollbar { display: none; }
+        .legal-tabs-mobile .legal-tab {
+            width: auto; flex: 0 0 auto; margin: 0; white-space: nowrap;
+            background: rgba(255,255,255,0.6);
+            border: 1px solid rgba(249,168,212,0.5);
+        }
+        .legal-tabs-mobile .legal-tab.active { border-color: transparent; }
+        .legal-body { max-height: none; padding: 1.4rem 1.35rem 1.85rem; }
+        .legal-card-head { padding: 1.4rem 1.5rem 1.1rem; }
+    }
+</style>
+
+<div class="legal-wrap">
+    <div class="legal-glow a"></div>
+    <div class="legal-glow b"></div>
+
+    <div class="legal-inner">
+
+        <!-- ── Başlık ── -->
+        <div class="legal-head">
+            <p class="legal-eyebrow">✦ Yasal Bilgiler ✦</p>
+            <h1 class="legal-title">Sözleşmeler & Politikalar</h1>
+            <div class="legal-title-line"></div>
+            <p class="legal-sub">
+                Ankavera olarak; 6502 sayılı Tüketicinin Korunması Hakkında Kanun ve
+                6698 sayılı Kişisel Verilerin Korunması Kanunu (KVKK) kapsamındaki tüm
+                yasal metinlerimizi şeffaflıkla sunuyoruz.
+            </p>
+        </div>
+
+        <div class="legal-grid">
+
+            <!-- ── Sidebar (masaüstü) ── -->
+            <aside class="legal-nav">
+                <p class="legal-nav-label">Belgeler</p>
+                @foreach (var t in tabs)
+                {
+                    <button type="button"
+                            class="legal-tab @(t.Key == activeDoc ? "active" : "")"
+                            data-tab="@t.Key"
+                            onclick="showLegal('@t.Key')">
+                        <span class="ic">@t.Icon</span>
+                        <span>@t.Title</span>
+                    </button>
+                }
+            </aside>
+
+            <!-- ── İçerik ── -->
+            <div>
+                <!-- Mobil sekmeler -->
+                <div class="legal-tabs-mobile">
+                    @foreach (var t in tabs)
+                    {
+                        <button type="button"
+                                class="legal-tab @(t.Key == activeDoc ? "active" : "")"
+                                data-tab="@t.Key"
+                                onclick="showLegal('@t.Key')">
+                            <span class="ic">@t.Icon</span>
+                            <span>@t.Title</span>
+                        </button>
+                    }
+                </div>
+
+                <div class="legal-card">
+
+                    <!-- ══════════ 1) MESAFELİ SATIŞ SÖZLEŞMESİ ══════════ -->
+                    <div class="legal-panel @(activeDoc == "mesafeli" ? "active" : "")" data-panel="mesafeli">
+                        <div class="legal-card-head">
+                            <h2>Mesafeli Satış Sözleşmesi</h2>
+                            <p class="meta">Son güncelleme: @DateTime.Now.ToString("dd.MM.yyyy") · 6502 sayılı Kanun & Mesafeli Sözleşmeler Yönetmeliği</p>
+                        </div>
+                        <div class="legal-body">
+                            <h3><span class="no">1</span> Taraflar</h3>
+                            <p>İşbu Mesafeli Satış Sözleşmesi (“Sözleşme”), aşağıda bilgileri yer alan Satıcı ile Alıcı arasında, elektronik ortamda kurulmuştur.</p>
+                            <h4>SATICI</h4>
+                            <table class="legal-table">
+                                <tr><td>Unvan</td><td><span class="ph">Ankavera</span></td></tr>
+                                <tr><td>Adres</td><td><span class="ph">Zafertepe Mh. Alp Sk. Viola Kent Sitesi</span></td></tr>
+                                <tr><td>MERSİS No</td><td><span class="ph">10208764154</span></td></tr>
+                                <tr><td>Vergi Dairesi / No</td><td><span class="ph">30 Ağustos Vergi Dairesi</span> / <span class="ph">3061142248</span></td></tr>
+                                <tr><td>Telefon</td><td>+90 (536) 593 81 73</td></tr>
+                                <tr><td>E-posta</td><td>ankaveradestek@gmail.com</td></tr>
+                                <tr><td>Web Sitesi</td><td><span class="ph">[www.ankavera.com]</span></td></tr>
+                            </table>
+                            <h4>ALICI</h4>
+                            <p>Sipariş sırasında beyan edilen ad-soyad, teslimat/fatura adresi, telefon ve e-posta bilgileri geçerlidir. Alıcı, bu bilgilerin doğruluğundan sorumludur.</p>
+
+                            <h3><span class="no">2</span> Sözleşmenin Konusu</h3>
+                            <p>İşbu Sözleşme'nin konusu; Alıcı'nın, Satıcı'ya ait <span class="ph">[www.ankavera.com]</span> internet sitesinden elektronik ortamda siparişini verdiği, nitelikleri ve satış fiyatı aşağıda belirtilen ürünün satışı ve teslimi ile ilgili olarak 6502 sayılı Tüketicinin Korunması Hakkında Kanun ve Mesafeli Sözleşmeler Yönetmeliği hükümleri gereğince tarafların hak ve yükümlülüklerinin belirlenmesidir.</p>
+
+                            <h3><span class="no">3</span> Sözleşme Konusu Ürün / Ödeme / Teslimat</h3>
+                            <ul>
+                                <li>Ürünün türü, miktarı, marka/modeli, rengi, adedi, satış bedeli ve ödeme şekli, sipariş özeti ve fatura üzerinde belirtildiği gibidir.</li>
+                                <li>Ürünlerin tüm vergiler dâhil peşin satış fiyatları sipariş onayı ekranında yer alır.</li>
+                                <li>Teslimat masrafı (kargo ücreti), aksi belirtilmedikçe Alıcı'ya aittir; kampanya koşullarına göre değişebilir.</li>
+                            </ul>
+
+                            <h3><span class="no">4</span> Genel Hükümler</h3>
+                            <ul>
+                                <li>Alıcı, ürünün temel nitelikleri, satış fiyatı ve ödeme şekli ile teslimata ilişkin ön bilgileri okuyup bilgi sahibi olduğunu ve elektronik ortamda gerekli teyidi verdiğini beyan eder.</li>
+                                <li>Sözleşme konusu ürün, yasal <strong>30 günlük</strong> süreyi aşmamak kaydıyla, Alıcı'nın belirttiği adrese kargo firması aracılığıyla teslim edilir.</li>
+                                <li>Ürün, Alıcı'dan başka bir kişiye teslim edilecekse, teslim edilecek kişinin teslimatı kabul etmemesinden Satıcı sorumlu tutulamaz.</li>
+                                <li>Satıcı, sözleşme konusu ürünün sağlam, eksiksiz ve varsa garanti belgeleriyle birlikte teslim edilmesinden sorumludur.</li>
+                            </ul>
+
+                            <h3><span class="no">5</span> Cayma Hakkı</h3>
+                            <p>Alıcı; sözleşme konusu ürünün kendisine veya gösterdiği adresteki kişiye tesliminden itibaren <strong>14 (on dört) gün</strong> içinde, hiçbir gerekçe göstermeksizin ve cezai şart ödemeksizin sözleşmeden cayma hakkına sahiptir.</p>
+                            <div class="legal-callout">
+                                <p><strong>Önemli — Hijyenik Ürün İstisnası:</strong> Mesafeli Sözleşmeler Yönetmeliği md. 15/1-(ç) uyarınca, iç giyim gibi tesliminden sonra <strong>ambalajı, bandı veya koruyucu poşeti açılmış / hijyenik açıdan iadeye uygun olmayan</strong> ürünlerde cayma hakkı kullanılamaz. Ayrıntı için “İptal & İade Koşulları” bölümüne bakınız.</p>
+                            </div>
+
+                            <h3><span class="no">6</span> Temerrüt & Yetkili Mahkeme</h3>
+                            <p>Alıcı, kredi kartı ile yaptığı ödemelerde temerrüde düştüğü takdirde, kart sahibi banka ile arasındaki sözleşme kapsamında faiz ödeyeceğini kabul eder. İşbu sözleşmeden doğan uyuşmazlıklarda, Ticaret Bakanlığı'nca ilan edilen değere kadar <strong>Tüketici Hakem Heyetleri</strong>, aşan durumlarda Alıcı'nın veya Satıcı'nın yerleşim yerindeki <strong>Tüketici Mahkemeleri</strong> yetkilidir.</p>
+
+                            <h3><span class="no">7</span> Yürürlük</h3>
+                            <p>Alıcı, siteden verdiği siparişe ait ödemeyi gerçekleştirdiğinde işbu Sözleşme'nin tüm koşullarını kabul etmiş sayılır. Sözleşme, taraflarca elektronik ortamda teyit edildiği tarihte yürürlüğe girer.</p>
+                        </div>
+                    </div>
+
+                    <!-- ══════════ 2) ÖN BİLGİLENDİRME FORMU ══════════ -->
+                    <div class="legal-panel @(activeDoc == "onbilgi" ? "active" : "")" data-panel="onbilgi">
+                        <div class="legal-card-head">
+                            <h2>Ön Bilgilendirme Formu</h2>
+                            <p class="meta">Mesafeli Sözleşmeler Yönetmeliği md. 5 kapsamında satış öncesi bilgilendirme</p>
+                        </div>
+                        <div class="legal-body">
+                            <h3><span class="no">1</span> Satıcı Bilgileri</h3>
+                            <table class="legal-table">
+                                <tr><td>Unvan</td><td><span class="ph">[Ankavera]</span></td></tr>
+                                <tr><td>Adres</td><td><span class="ph">[Zafertepe Mh. Alp Sk. Viola Kent Sitesi]</span></td></tr>
+                                <tr><td>Telefon</td><td>+90 (536) 593 81 73</td></tr>
+                                <tr><td>E-posta</td><td>ankaveradestek@gmail.com</td></tr>
+                            </table>
+
+                            <h3><span class="no">2</span> Ürünün Temel Nitelikleri</h3>
+                            <p>Satışa konu ürünün türü, cinsi, adedi, rengi, bedeni ve fiyatı, ilgili ürün sayfasında ve sipariş özetinde yer almaktadır. Bu bilgiler, siparişin tamamlanmasından önce Alıcı tarafından görüntülenebilir durumdadır.</p>
+
+                            <h3><span class="no">3</span> Fiyat & Ödeme</h3>
+                            <ul>
+                                <li>Ürünlerin KDV dâhil TL cinsinden satış fiyatları ürün sayfasında gösterilir.</li>
+                                <li>Ödeme; kredi/banka kartı, havale/EFT veya sitede sunulan diğer güvenli ödeme yöntemleriyle yapılabilir.</li>
+                                <li>Fiyatlar, güncelleme yapılana kadar geçerlidir; kampanyalı fiyatlar belirtilen süreyle sınırlıdır.</li>
+                            </ul>
+
+                            <h3><span class="no">4</span> Teslimat & Kargo</h3>
+                            <ul>
+                                <li>Teslimat, sipariş onayını takiben en geç <strong>30 gün</strong> içinde <span class="ph">[Kargo Firması]</span> aracılığıyla yapılır.</li>
+                                <li>Kargo ücreti ve tahmini teslim süresi, sipariş özetinde belirtilir.</li>
+                                <li>Ürünler diskret (gizli) paketleme ile gönderilir.</li>
+                            </ul>
+
+                            <h3><span class="no">5</span> Cayma Hakkı ve İstisnaları</h3>
+                            <p>Alıcı, teslimden itibaren <strong>14 gün</strong> içinde cayma hakkına sahiptir. Ancak <strong>iç giyim ürünleri</strong> hijyen gerekçesiyle, ambalajı/koruyucu poşeti açıldığında iade kapsamı dışındadır (Yönetmelik md. 15).</p>
+
+                            <h3><span class="no">6</span> Şikâyet & Uyuşmazlık</h3>
+                            <p>Alıcı, şikâyet ve itirazlarını yukarıdaki iletişim kanallarından iletebilir; ayrıca ilgili <strong>Tüketici Hakem Heyeti</strong> veya <strong>Tüketici Mahkemesi</strong>'ne başvurabilir.</p>
+
+                            <div class="legal-callout">
+                                <p>Alıcı, sipariş vermeden önce bu Ön Bilgilendirme Formu'nun içeriğini okuyup anladığını ve elektronik ortamda onayladığını kabul eder.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ══════════ 3) KULLANIM KOŞULLARI & ÜYELİK ══════════ -->
+                    <div class="legal-panel @(activeDoc == "kullanim" ? "active" : "")" data-panel="kullanim">
+                        <div class="legal-card-head">
+                            <h2>Kullanım Koşulları & Üyelik Sözleşmesi</h2>
+                            <p class="meta">Platform kullanım kuralları · Fikri mülkiyet · Üye sorumlulukları</p>
+                        </div>
+                        <div class="legal-body">
+                            <h3><span class="no">1</span> Taraflar & Kapsam</h3>
+                            <p>İşbu sözleşme, <span class="ph">[www.ankavera.com]</span> internet sitesini (“Platform”) işleten <span class="ph">[Ankavera]</span> ile Platform'u kullanan/üye olan kullanıcı (“Üye”) arasında düzenlenmiştir. Platform'u ziyaret eden veya üye olan herkes, bu koşulları kabul etmiş sayılır.</p>
+
+                            <h3><span class="no">2</span> Üyelik Koşulları</h3>
+                            <ul>
+                                <li>Üye olmak için <strong>18 yaşını doldurmuş</strong> ve fiil ehliyetine sahip olmak gerekir.</li>
+                                <li>Üye, kayıt sırasında verdiği bilgilerin doğru, güncel ve eksiksiz olduğunu taahhüt eder.</li>
+                                <li>Hesap güvenliği (şifre gizliliği) Üye'nin sorumluluğundadır; hesap üzerinden yapılan işlemlerden Üye sorumludur.</li>
+                            </ul>
+
+                            <h3><span class="no">3</span> Üye Sorumlulukları</h3>
+                            <ul>
+                                <li>Platform'u yürürlükteki mevzuata, ahlaka ve iyi niyet kurallarına aykırı kullanmamak.</li>
+                                <li>Platform'un güvenliğini tehdit edecek yazılım/işlem (bot, kazıma, tersine mühendislik, saldırı vb.) gerçekleştirmemek.</li>
+                                <li>Başka kullanıcıların haklarını ihlal edecek, yanıltıcı veya yasa dışı içerik paylaşmamak.</li>
+                            </ul>
+
+                            <h3><span class="no">4</span> Fikri Mülkiyet Hakları</h3>
+                            <p>Platform üzerindeki tüm içerik — <strong>logo, marka, ürün görselleri, metinler, tasarım, arayüz ve yazılım</strong> dâhil — <span class="ph">[Ankavera]</span>'na veya lisans verenlerine aittir ve fikri mülkiyet mevzuatıyla korunmaktadır.</p>
+                            <ul>
+                                <li>İçerikler, yazılı izin olmaksızın kopyalanamaz, çoğaltılamaz, dağıtılamaz veya ticari amaçla kullanılamaz.</li>
+                                <li>“Ankavera” markası ve ilgili görsel kimlik tescillidir; izinsiz kullanımı hukuki sorumluluk doğurur.</li>
+                            </ul>
+
+                            <h3><span class="no">5</span> Hizmet Sürekliliği & Değişiklikler</h3>
+                            <p>Satıcı, Platform'un içeriğini, ürün yelpazesini ve işbu koşulları önceden bildirmeksizin güncelleme hakkını saklı tutar. Bakım, teknik arıza veya mücbir sebeplerle hizmete ara verilebilir.</p>
+
+                            <h3><span class="no">6</span> Üyeliğin Sona Ermesi</h3>
+                            <ul>
+                                <li>Üye, dilediği zaman hesabının silinmesini talep ederek üyeliğine son verebilir.</li>
+                                <li>Koşullara aykırılık hâlinde Satıcı, üyeliği askıya alabilir veya sonlandırabilir.</li>
+                            </ul>
+
+                            <h3><span class="no">7</span> Uygulanacak Hukuk</h3>
+                            <p>İşbu sözleşmeden doğan uyuşmazlıklarda <strong>Türkiye Cumhuriyeti hukuku</strong> uygulanır ve <span class="ph">[Yetkili Şehir]</span> Mahkemeleri ile İcra Daireleri yetkilidir.</p>
+                        </div>
+                    </div>
+
+                    <!-- ══════════ 4) KVKK AYDINLATMA METNİ ══════════ -->
+                    <div class="legal-panel @(activeDoc == "kvkk" ? "active" : "")" data-panel="kvkk">
+                        <div class="legal-card-head">
+                            <h2>KVKK Aydınlatma Metni</h2>
+                            <p class="meta">6698 sayılı Kişisel Verilerin Korunması Kanunu md. 10 kapsamında aydınlatma</p>
+                        </div>
+                        <div class="legal-body">
+                            <h3><span class="no">1</span> Veri Sorumlusu</h3>
+                            <p>6698 sayılı KVKK uyarınca kişisel verileriniz; veri sorumlusu sıfatıyla <span class="ph">[Ankavera]</span> (“Şirket”) tarafından aşağıda açıklanan kapsamda işlenmektedir.</p>
+                            <table class="legal-table">
+                                <tr><td>Veri Sorumlusu</td><td><span class="ph">[Ankavera]</span></td></tr>
+                                <tr><td>Adres</td><td><span class="ph">[Zafertepe Mh. Alp Sk. Viola Kent Sitesi]</span></td></tr>
+                                <tr><td>E-posta</td><td>ankaveradestek@gmail.com</td></tr>
+                            </table>
+
+                            <h3><span class="no">2</span> İşlenen Kişisel Veriler</h3>
+                            <ul>
+                                <li><strong>Kimlik:</strong> ad, soyad.</li>
+                                <li><strong>İletişim:</strong> e-posta, telefon, teslimat/fatura adresi.</li>
+                                <li><strong>Müşteri İşlem:</strong> sipariş geçmişi, sepet, favoriler, talep/şikâyet kayıtları.</li>
+                                <li><strong>İşlem Güvenliği:</strong> IP adresi, oturum/çerez bilgileri, giriş kayıtları.</li>
+                                <li><strong>Finansal:</strong> ödeme işlemine ilişkin bilgiler (kart verileri Şirket tarafından saklanmaz; lisanslı ödeme kuruluşunca işlenir).</li>
+                            </ul>
+
+                            <h3><span class="no">3</span> İşleme Amaçları</h3>
+                            <ul>
+                                <li>Sipariş, satış, teslimat ve satış sonrası süreçlerin yürütülmesi.</li>
+                                <li>Üyelik oluşturma ve hesap yönetimi.</li>
+                                <li>Yasal yükümlülüklerin (fatura, muhasebe, vergi) yerine getirilmesi.</li>
+                                <li>Talep/şikâyet yönetimi ve müşteri memnuniyeti.</li>
+                                <li>Açık rızaya bağlı olarak pazarlama, kampanya ve bilgilendirme iletişimi.</li>
+                            </ul>
+
+                            <h3><span class="no">4</span> Hukuki Sebepler (md. 5-6)</h3>
+                            <ul>
+                                <li>Sözleşmenin kurulması/ifası için veri işlemenin zorunlu olması.</li>
+                                <li>Hukuki yükümlülüğün yerine getirilmesi.</li>
+                                <li>Meşru menfaat.</li>
+                                <li>Ticari elektronik ileti ve isteğe bağlı işlemler için <strong>açık rıza</strong>.</li>
+                            </ul>
+
+                            <h3><span class="no">5</span> Aktarım</h3>
+                            <p>Verileriniz; kargo/lojistik firmaları, ödeme/banka kuruluşları, e-fatura ve barındırma (hosting) sağlayıcıları ile yetkili kamu kurumlarına, yalnızca yukarıdaki amaçlarla ve mevzuata uygun şekilde aktarılabilir.</p>
+
+                            <h3><span class="no">6</span> Saklama Süresi</h3>
+                            <p>Kişisel verileriniz, ilgili mevzuatta öngörülen süreler (ör. ticari ve vergisel kayıtlar için <strong>10 yıl</strong>) ve işleme amacının gerektirdiği süre boyunca saklanır; sürenin sonunda silinir, yok edilir veya anonim hâle getirilir.</p>
+
+                            <h3><span class="no">7</span> İlgili Kişinin Hakları (md. 11)</h3>
+                            <ul>
+                                <li>Kişisel verinizin işlenip işlenmediğini öğrenme ve buna ilişkin bilgi talep etme.</li>
+                                <li>İşleme amacını ve amaca uygun kullanılıp kullanılmadığını öğrenme.</li>
+                                <li>Eksik/yanlış işlenen verilerin düzeltilmesini isteme.</li>
+                                <li>Şartların oluşması hâlinde silinmesini/yok edilmesini isteme.</li>
+                                <li>Aktarıldığı üçüncü kişilerin bildirilmesini isteme; zarara uğranması hâlinde giderilmesini talep etme.</li>
+                            </ul>
+                            <div class="legal-callout">
+                                <p>Taleplerinizi <strong>ankaveradestek@gmail.com</strong> adresine veya <span class="ph">[Zafertepe Mh. Alp Sk. Viola Kent Sitesi]</span> adresine yazılı olarak iletebilirsiniz. Başvurularınız en geç <strong>30 gün</strong> içinde sonuçlandırılır.</p>
+                            </div>
+
+                            <h3><span class="no">8</span> Açık Rıza</h3>
+                            <p>Ticari elektronik ileti gönderimi ve pazarlama amaçlı işlemler, yalnızca açık rızanızla gerçekleştirilir. Rızanızı dilediğiniz zaman geri çekebilirsiniz.</p>
+                        </div>
+                    </div>
+
+                    <!-- ══════════ 5) GİZLİLİK & ÇEREZ POLİTİKASI ══════════ -->
+                    <div class="legal-panel @(activeDoc == "gizlilik" ? "active" : "")" data-panel="gizlilik">
+                        <div class="legal-card-head">
+                            <h2>Gizlilik & Çerez Politikası</h2>
+                            <p class="meta">Verilerinizin ve tarayıcı çerezlerinin nasıl işlendiği</p>
+                        </div>
+                        <div class="legal-body">
+                            <h3><span class="no">1</span> Genel</h3>
+                            <p><span class="ph">[Ankavera]</span> olarak gizliliğinize önem veriyoruz. Bu politika, Platform'u kullanırken verilerinizin ve çerezlerin nasıl toplandığını, işlendiğini ve korunduğunu açıklar.</p>
+
+                            <h3><span class="no">2</span> Toplanan Bilgiler</h3>
+                            <ul>
+                                <li><strong>Sizin verdiğiniz:</strong> üyelik, sipariş ve iletişim formlarındaki bilgiler.</li>
+                                <li><strong>Otomatik toplanan:</strong> IP adresi, tarayıcı/cihaz bilgisi, ziyaret edilen sayfalar ve çerez verileri.</li>
+                            </ul>
+
+                            <h3><span class="no">3</span> Çerez (Cookie) Nedir?</h3>
+                            <p>Çerezler, ziyaret ettiğiniz siteler tarafından tarayıcınıza kaydedilen küçük metin dosyalarıdır. Oturumunuzu sürdürmek, tercihlerinizi hatırlamak ve site performansını ölçmek için kullanılır.</p>
+
+                            <h3><span class="no">4</span> Kullandığımız Çerez Türleri</h3>
+                            <ul>
+                                <li><strong>Zorunlu Çerezler:</strong> oturum, sepet ve güvenlik için gereklidir; devre dışı bırakılamaz.</li>
+                                <li><strong>İşlevsel Çerezler:</strong> dil/tercih gibi ayarları hatırlar.</li>
+                                <li><strong>Analitik Çerezler:</strong> site kullanımını anonim olarak ölçer (ör. <span class="ph">[Analitik Aracı]</span>).</li>
+                                <li><strong>Pazarlama Çerezleri:</strong> yalnızca rızanızla, ilgi alanınıza uygun içerik/reklam sunar.</li>
+                            </ul>
+
+                            <h3><span class="no">5</span> Çerez Yönetimi</h3>
+                            <p>Tarayıcı ayarlarınızdan çerezleri silebilir veya engelleyebilirsiniz. Zorunlu çerezlerin engellenmesi, sitenin bazı işlevlerini kullanılamaz hâle getirebilir.</p>
+
+                            <h3><span class="no">6</span> Veri Güvenliği</h3>
+                            <p>Verileriniz <strong>SSL şifreleme</strong> ve uygun teknik/idari tedbirlerle korunur. Ödeme bilgileriniz lisanslı ödeme kuruluşları üzerinden işlenir; kart verileriniz sistemimizde saklanmaz.</p>
+
+                            <h3><span class="no">7</span> Üçüncü Taraf Bağlantıları</h3>
+                            <p>Platform, üçüncü taraf sitelere bağlantı içerebilir. Bu sitelerin gizlilik uygulamalarından Şirket sorumlu değildir.</p>
+
+                            <h3><span class="no">8</span> İletişim</h3>
+                            <p>Gizlilik ile ilgili sorularınız için: <strong>ankaveradestek@gmail.com</strong></p>
+                        </div>
+                    </div>
+
+                    <!-- ══════════ 6) İPTAL & İADE KOŞULLARI ══════════ -->
+                    <div class="legal-panel @(activeDoc == "iade" ? "active" : "")" data-panel="iade">
+                        <div class="legal-card-head">
+                            <h2>İptal & İade Koşulları</h2>
+                            <p class="meta">14 günlük cayma hakkı · Hijyen istisnası · İade süreci</p>
+                        </div>
+                        <div class="legal-body">
+                            <h3><span class="no">1</span> Cayma Hakkı (14 Gün)</h3>
+                            <p>Alıcı, ürünün teslim alındığı tarihten itibaren <strong>14 (on dört) gün</strong> içinde herhangi bir gerekçe göstermeksizin ve cezai şart ödemeksizin sözleşmeden cayma hakkına sahiptir (6502 sayılı Kanun md. 48).</p>
+
+                            <div class="legal-callout">
+                                <p><strong>⚠ Hijyen Politikası:</strong> İç giyim ürünlerinde, hijyen koşulları gereği ambalajı / koruyucu poşeti / hijyen bandı <strong>açılmış ürünlerde iade ve değişim kabul edilmemektedir</strong> (Mesafeli Sözleşmeler Yönetmeliği md. 15/1-ç).</p>
+                            </div>
+
+                            <h3><span class="no">2</span> İade Edilebilir Ürün Koşulları</h3>
+                            <ul>
+                                <li>Ürün <strong>kullanılmamış</strong>, denenmemiş ve yeniden satılabilir durumda olmalıdır.</li>
+                                <li>Orijinal ambalaj, hijyen bandı ve koruyucu poşet <strong>açılmamış / hasarsız</strong> olmalıdır.</li>
+                                <li>Fatura ve tüm aksesuarlar (etiket, hediye vb.) eksiksiz iade edilmelidir.</li>
+                            </ul>
+
+                            <h3><span class="no">3</span> İade Süreci</h3>
+                            <ul>
+                                <li>İade talebinizi <strong>ankaveradestek@gmail.com</strong> veya +90 (536) 593 81 73 üzerinden iletin.</li>
+                                <li>Onaylanan iadeler <span class="ph">[Anlaşmalı Kargo Firması]</span> ile <span class="ph">[İade Kodu]</span> kullanılarak gönderilir.</li>
+                                <li>Ürün tarafımıza ulaşıp kontrol edildikten sonra iade onaylanır.</li>
+                            </ul>
+
+                            <h3><span class="no">4</span> Ücret İadesi</h3>
+                            <p>Cayma hakkının kullanıldığı ve koşulların sağlandığı iadelerde, ürün bedeli en geç <strong>14 gün</strong> içinde, ödemeyi yaptığınız yönteme (kredi kartı/havale) iade edilir. Kredi kartı iadelerinin hesabınıza yansıması bankanıza bağlı olarak değişebilir.</p>
+
+                            <h3><span class="no">5</span> Ayıplı / Hatalı Ürün</h3>
+                            <p>Ürün ayıplı (kusurlu), hatalı veya siparişten farklı gönderilmişse, kargo ve iade masrafları <strong>Satıcı'ya</strong> aittir. Bu durumda ücretsiz değişim veya tam iade sağlanır.</p>
+
+                            <h3><span class="no">6</span> İptal</h3>
+                            <p>Sipariş <strong>kargoya verilmeden önce</strong> iptal edilebilir. Ödemesi alınmış iptal edilen siparişlerin bedeli, aynı ödeme yöntemiyle iade edilir.</p>
+
+                            <h3><span class="no">7</span> İletişim</h3>
+                            <p>İptal ve iade işlemleriniz için hafta içi 09:00–18:00 arası bize ulaşabilirsiniz: <strong>ankaveradestek@gmail.com</strong></p>
+                        </div>
+                    </div>
+
+                </div><!-- /legal-card -->
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function showLegal(key) {
+            // Panelleri değiştir
+            document.querySelectorAll('.legal-panel').forEach(function (p) {
+                p.classList.toggle('active', p.getAttribute('data-panel') === key);
+            });
+            // Sekme (masaüstü + mobil) durumunu güncelle
+            document.querySelectorAll('.legal-tab').forEach(function (t) {
+                t.classList.toggle('active', t.getAttribute('data-tab') === key);
+            });
+            // URL hash'ini güncelle (paylaşılabilir link)
+            if (history.replaceState) {
+                history.replaceState(null, '', '#' + key);
+            }
+            // İçerik gövdesini başa sar
+            var body = document.querySelector('.legal-panel.active .legal-body');
+            if (body) body.scrollTop = 0;
+        }
+
+        // Sayfa açılışında URL hash'i varsa ilgili sekmeyi aç
+        (function () {
+            var hash = (window.location.hash || '').replace('#', '').trim();
+            var valid = ['mesafeli', 'onbilgi', 'kullanim', 'kvkk', 'gizlilik', 'iade'];
+            if (hash && valid.indexOf(hash) !== -1) {
+                showLegal(hash);
+            }
+        })();
+    </script>
+}

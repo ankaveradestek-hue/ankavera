@@ -1,0 +1,128 @@
+﻿@{
+    ViewData["Title"] = "Hakkımızda";
+    Layout = "_Layout";
+}
+
+<!-- Hero -->
+<section style="position:relative;height:55vh;min-height:380px;overflow:hidden;">
+    <img src="https://images.unsplash.com/photo-1631947430066-48c30d57b943?w=1920&q=80"
+         alt="Ankavera"
+         style="position:absolute;inset:0;width:100%;height:100%;
+    object-fit:cover;object-position:center;" />
+    <div style="position:absolute;inset:0;
+        background:linear-gradient(160deg,rgba(61,26,42,.65),rgba(232,71,109,.2));">
+    </div>
+    <div style="position:relative;z-index:10;height:100%;display:flex;
+        flex-direction:column;align-items:center;justify-content:center;
+        text-align:center;padding:2rem;">
+        <p style="color:#fda4af;font-size:.72rem;letter-spacing:.25em;
+            text-transform:uppercase;font-weight:500;margin-bottom:.75rem;">
+            ✦ Hikayemiz ✦
+        </p>
+        <h1 style="font-family:'Cormorant Garamond',serif;
+            font-size:clamp(2.5rem,7vw,5rem);
+            font-weight:300;color:white;letter-spacing:.06em;
+            text-shadow:0 4px 30px rgba(0,0,0,.35);margin-bottom:.75rem;">
+            Hakkımızda
+        </h1>
+        <p style="color:rgba(255,255,255,.75);font-size:1rem;font-weight:300;
+            max-width:500px;line-height:1.7;">
+            Her kadının içindeki Anka kuşunu keşfetmesi için doğduk.
+        </p>
+    </div>
+</section>
+
+<!-- Misyon -->
+<section style="padding:5rem 1.5rem;background:white;">
+    <div style="max-width:800px;margin:0 auto;text-align:center;">
+        <p style="color:#f43f7a;font-size:.72rem;letter-spacing:.22em;
+            text-transform:uppercase;font-weight:500;margin-bottom:1rem;">
+            ✦ Misyonumuz ✦
+        </p>
+        <h2 style="font-family:'Cormorant Garamond',serif;font-size:2.5rem;
+            font-weight:300;color:#881337;margin-bottom:2rem;">
+            Zarafetin Yeniden Doğuşu
+        </h2>
+        <div style="width:2.5rem;height:1px;margin:0 auto 2.5rem;
+            background:linear-gradient(90deg,transparent,#f43f7a,transparent);">
+        </div>
+        <p style="font-size:1.05rem;color:#7c3f60;font-weight:300;
+            line-height:1.9;margin-bottom:1.5rem;">
+            <strong style="font-family:'Cormorant Garamond',serif;
+            font-weight:500;color:#881337;">Ankavera</strong>,
+            efsanevi yeniden doğuşun sembolü olan Anka Kuşu'ndan ilham alır.
+        </p>
+        <p style="font-size:1rem;color:#9d7a8a;font-weight:300;line-height:1.9;">
+            Premium kumaşlar, özenli işçilik ve feminen tasarımla
+            her kadının kendini özel, güçlü ve özgün hissetmesini sağlıyoruz.
+        </p>
+    </div>
+</section>
+
+<!-- Değerler -->
+<section style="padding:5rem 1.5rem;background:#fff5f7;">
+    <div style="max-width:1100px;margin:0 auto;">
+        <div style="text-align:center;margin-bottom:3rem;">
+            <h2 style="font-family:'Cormorant Garamond',serif;font-size:2.25rem;
+                font-weight:300;color:#881337;">
+                Neden Ankavera?
+            </h2>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+            gap:1.5rem;">
+            @foreach (var v in new[]{
+                ("🌸","Premium Kumaş","En kaliteli saten, dantel ve ipek karışımı kumaşlar."),
+                ("✂️","Özel Tasarım","Her koleksiyon feminen ve modern anlayışla tasarlandı."),
+                ("💎","Lüks Paketleme","Özel hediye kutusu ve ipek kâğıda sarılı teslimat."),
+                ("🔒","Diskret Gönderim","Gizlilik önceliğimizdir. Güvenli paketleme garantisi."),
+            })
+            {
+                <div style="background:white;border-radius:1.5rem;padding:2rem;
+                    text-align:center;
+                    box-shadow:0 4px 20px rgba(225,29,72,.06);
+                    transition:transform .3s,box-shadow .3s;"
+                     onmouseover="this.style.transform='translateY(-6px)';
+                    this.style.boxShadow='0 16px 40px rgba(197,48,89,.15)'"
+                     onmouseout="this.style.transform='translateY(0)';
+                    this.style.boxShadow='0 4px 20px rgba(225,29,72,.06)'">
+                    <div style="font-size:2.5rem;margin-bottom:1rem;">@v.Item1</div>
+                    <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.35rem;
+                        font-weight:400;color:#881337;margin-bottom:.75rem;">
+                        @v.Item2
+                    </h3>
+                    <p style="font-size:.82rem;color:#9d7a8a;font-weight:300;line-height:1.7;">
+                        @v.Item3
+                    </p>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<!-- İletişim CTA -->
+<section style="padding:5rem 1.5rem;text-align:center;
+    background:linear-gradient(135deg,#3d1a2a,#5c1229);">
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:2.5rem;
+        font-weight:300;color:white;margin-bottom:1rem;">
+        Sorularınız mı var?
+    </h2>
+    <p style="color:rgba(253,164,175,.7);font-size:.9rem;font-weight:300;
+        margin-bottom:2rem;max-width:380px;margin-left:auto;margin-right:auto;">
+        WhatsApp veya e-posta ile ulaşın. Yanıt süresi ~1 saattir.
+    </p>
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+        <a href="https://wa.me/905551234567"
+           style="padding:.9rem 2rem;background:linear-gradient(135deg,#22c55e,#16a34a);
+            color:white;border-radius:9999px;font-size:.82rem;font-weight:600;
+            letter-spacing:.1em;text-decoration:none;">
+            💬 WhatsApp
+        </a>
+        <a href="mailto:info@ankavera.com"
+           style="padding:.9rem 2rem;background:rgba(255,255,255,.12);
+            color:white;border-radius:9999px;font-size:.82rem;font-weight:600;
+            letter-spacing:.1em;text-decoration:none;
+            border:1px solid rgba(255,255,255,.25);">
+            📧 E-posta
+        </a>
+    </div>
+</section>

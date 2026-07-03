@@ -1,0 +1,414 @@
+﻿@model ANKAVERA_İÇ_GİYİM.Models.HomeViewModel
+@{
+    ViewData["Title"] = "Ana Sayfa";
+}
+
+<!-- ================= HERO SECTION (SİSLİ GIF EFEKTİ İLE) ================= -->
+<section class="relative w-full h-[90vh] min-h-[600px] flex items-center justify-center overflow-hidden">
+
+    <!-- 1. Arka Plan GIF'i -->
+    <!-- (wwwroot/images/ klasörüne 'hero.gif' adında dosya attığından emin ol) -->
+    <img src="~/images/baslangic.gif" alt="Ankavera Yeni Koleksiyon" class="absolute inset-0 w-full h-full object-cover z-0" />
+
+    <!-- 2. Sisli / Puslu Filtre (İşte asıl sihri yapan kısım burası) -->
+    <!-- bg-black/30 resmi biraz karartır, backdrop-blur-sm ise o sisli, buzlu cam efektini verir -->
+    <div class="absolute inset-0 bg-black/40 backdrop-blur-sm z-10"></div>
+
+    <!-- 3. Yazılar ve Butonlar (Z-20 ile sisin üzerine çıkarıyoruz) -->
+    <div class="relative z-20 text-center px-4 max-w-4xl mx-auto flex flex-col items-center">
+
+        <!-- Üstteki Küçük Rozet -->
+        <span class="border border-white/40 bg-white/10 backdrop-blur-md text-white text-xs font-medium tracking-[0.2em] px-6 py-2 rounded-full mb-8 uppercase shadow-sm">
+            ✦ Yeni Koleksiyon 2025 ✦
+        </span>
+
+        <!-- Ana Başlık -->
+        <h1 class="font-serif text-6xl md:text-8xl text-white mb-4 drop-shadow-lg tracking-wide">
+            Ankavera
+        </h1>
+
+        <!-- Alt Başlık -->
+        <h2 class="text-2xl md:text-3xl text-rose-100 font-light italic mb-6 drop-shadow-md">
+            Zarafetin yeniden doğuşu
+        </h2>
+
+        <!-- Açıklama Metni -->
+        <p class="text-base md:text-lg text-white/90 font-light max-w-2xl mx-auto mb-10 drop-shadow">
+            Her kadının içindeki Anka kuşunu keşfetmesi için tasarlandı.
+            Premium lüks iç giyim & fantezi koleksiyonu.
+        </p>
+
+        <!-- Butonlar -->
+        <div class="flex flex-col sm:flex-row gap-4 justify-center w-full sm:w-auto">
+
+            <!-- Pembe Dolgulu Buton -->
+            <a href="#koleksiyon" class="bg-rose-500 hover:bg-rose-600 text-white px-10 py-3.5 rounded-full font-medium transition-all shadow-lg shadow-rose-900/50">
+                Koleksiyonu Keşfet
+            </a>
+
+            <!-- Şeffaf / Sisli İkinci Buton -->
+            <button class="bg-white/10 hover:bg-white/20 border border-white/50 backdrop-blur-md text-white px-8 py-3.5 rounded-full font-medium transition-all flex items-center justify-center gap-2">
+                <!-- Kalp İkonu SVG -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+                Favorilere Ekle
+            </button>
+
+        </div>
+    </div>
+
+</section>
+<!-- ========================================================================= -->
+
+<!-- Parallax Animasyon CSS -->
+<style>
+    @@keyframes slowZoom {
+        from {
+            transform: scale(1);
+        }
+
+        to {
+            transform: scale(1.08);
+        }
+    }
+</style>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     2. GÜVEN BANTLARI
+══════════════════════════════════════════════════════════ -->
+<section class="bg-white border-b border-rose-100/60">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 divide-x divide-rose-100">
+            @{
+                var trustItems = new[]
+                {
+                    new { Icon = "🚚", Title = "Ücretsiz Kargo",  Sub = "500₺ üzeri siparişlerde" },
+                    new { Icon = "🔒", Title = "Güvenli Ödeme",  Sub = "256-bit SSL şifreleme" },
+                    new { Icon = "🎀", Title = "Özel Paketleme", Sub = "Hediye kutusu seçeneği" },
+                    new { Icon = "💬", Title = "7/24 Destek",    Sub = "WhatsApp ile ulaşın" },
+                };
+            }
+            @foreach (var item in trustItems)
+            {
+                <div class="flex flex-col md:flex-row items-center md:items-center gap-2 md:gap-3 text-center md:text-left px-4">
+                    <span class="text-2xl flex-shrink-0">@item.Icon</span>
+                    <div>
+                        <p class="text-ankavera-700 font-semibold text-xs tracking-wide">@item.Title</p>
+                        <p class="text-rose-400/70 text-xs font-light">@item.Sub</p>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     3. KATEGORİLER
+══════════════════════════════════════════════════════════ -->
+<section class="py-20 bg-rose-50/60">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <!-- Başlık -->
+        <div class="text-center mb-14">
+            <p class="text-rose-400 text-xs font-medium tracking-widest uppercase mb-3">✦ Koleksiyonlarımız ✦</p>
+            <h2 class="font-serif-ankavera text-4xl md:text-5xl font-light text-ankavera-800 tracking-wide">
+                Kategoriyi Keşfet
+            </h2>
+            <div class="gold-line mt-5 max-w-xs mx-auto"></div>
+        </div>
+
+        <!-- Kategori Grid -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-5">
+            @foreach (var category in Model.Categories)
+            {
+                <a href="#"
+                   class="group relative overflow-hidden rounded-2xl aspect-square flex flex-col items-center justify-end p-6 cursor-pointer"
+                   style="background: linear-gradient(135deg, #fff0f3, #ffd6e0, #ffb3c6);">
+
+                    <!-- Arka plan dekoratif daire -->
+                    <div class="absolute -top-8 -right-8 w-32 h-32 rounded-full opacity-30 group-hover:opacity-50 transition-opacity"
+                         style="background: radial-gradient(circle, #f7698a, transparent);"></div>
+
+                    <!-- Emoji İkonu -->
+                    <div class="absolute top-6 right-6 text-3xl transform group-hover:scale-125 transition-transform duration-300">
+                        @category.IconEmoji
+                    </div>
+
+                    <!-- Alt İçerik -->
+                    <div class="relative text-center">
+                        <h3 class="font-serif-ankavera text-xl font-light text-ankavera-800 mb-1 group-hover:text-ankavera-600 transition-colors">
+                            @category.Name
+                        </h3>
+                        <p class="text-rose-500/70 text-xs font-light leading-snug">
+                            @category.Description
+                        </p>
+                        <div class="mt-3 w-8 h-0.5 mx-auto rounded-full transition-all duration-300 group-hover:w-16"
+                             style="background: linear-gradient(90deg, #f7698a, #c93059);"></div>
+                    </div>
+                </a>
+            }
+        </div>
+    </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     4. ÖNE ÇIKAN ÜRÜNLER
+══════════════════════════════════════════════════════════ -->
+<section id="featured" class="py-24 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <!-- Başlık -->
+        <div class="text-center mb-16">
+            <p class="text-rose-400 text-xs font-medium tracking-widest uppercase mb-3">✦ Seçtiklerimiz ✦</p>
+            <h2 class="font-serif-ankavera text-4xl md:text-5xl font-light text-ankavera-800 tracking-wide">
+                Öne Çıkan Ürünler
+            </h2>
+            <p class="text-rose-400/70 text-sm font-light mt-4 max-w-md mx-auto">
+                Editörlerimizin özenle seçtiği, en çok beğenilen lüks iç giyim parçaları
+            </p>
+            <div class="gold-line mt-5 max-w-xs mx-auto"></div>
+        </div>
+
+        <!-- Ürün Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            @foreach (var product in Model.FeaturedProducts)
+            {
+                <article class="product-card group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-rose-200/60 border border-rose-50">
+
+                    <!-- Ürün Resmi -->
+                    <div class="relative overflow-hidden aspect-[3/4] bg-rose-50">
+                        <img src="@product.ImageUrl"
+                             alt="@product.Name"
+                             class="w-full h-full object-cover transform group-hover:scale-108 transition-transform duration-700 ease-out"
+                             style="transition: transform 0.7s ease;"
+                             onerror="this.src='https://images.unsplash.com/photo-1617922001439-4a2e6562f328?w=600&q=80'" />
+
+                        <!-- Overlay: Sepete Ekle -->
+                        <div class="card-overlay absolute inset-0 flex items-end justify-center pb-6 px-6"
+                             style="background: linear-gradient(to top, rgba(61,26,42,0.65) 0%, transparent 60%);">
+                            <button class="w-full btn-ankavera text-white font-medium tracking-wider py-3.5 rounded-full text-sm flex items-center justify-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+                                    <line x1="3" y1="6" x2="21" y2="6" />
+                                    <path d="M16 10a4 4 0 0 1-8 0" />
+                                </svg>
+                                Sepete Ekle
+                            </button>
+                        </div>
+
+                        <!-- Badges -->
+                        <div class="absolute top-4 left-4 flex flex-col gap-2">
+                            @if (!string.IsNullOrEmpty(product.Badge))
+                            {
+                                <span class="px-3 py-1 rounded-full text-xs font-semibold tracking-wide text-white"
+                                      style="@(product.IsNew
+                                                                                ? "background: linear-gradient(135deg, #f7698a, #c93059);"
+                                                                                : product.IsBestseller
+                                                                                    ? "background: linear-gradient(135deg, #ff8c62, #e8476d);"
+                                                                                    : "background: linear-gradient(135deg, #a062d8, #c93059);")">
+                                    @product.Badge
+                                </span>
+                            }
+                        </div>
+
+                        <!-- Favori Butonu -->
+                        <button class="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center hover:bg-rose-100 transition-all shadow-sm group/fav"
+                                title="Favorilere Ekle">
+                            <svg class="w-4 h-4 text-rose-400 group-hover/fav:text-rose-600 group-hover/fav:scale-110 transition-all"
+                                 fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Ürün Bilgisi -->
+                    <div class="p-6">
+                        <!-- Kategori -->
+                        <p class="text-rose-400/70 text-xs font-medium tracking-widest uppercase mb-2">
+                            @product.CategoryName
+                        </p>
+
+                        <!-- Ürün Adı -->
+                        <h3 class="font-serif-ankavera text-xl font-light text-ankavera-800 mb-2 group-hover:text-ankavera-600 transition-colors leading-snug">
+                            @product.Name
+                        </h3>
+
+                        <!-- Açıklama -->
+                        <p class="text-rose-500/60 text-xs font-light leading-relaxed mb-4 line-clamp-2">
+                            @product.Description
+                        </p>
+
+                        <!-- Fiyat + Aksiyon -->
+                        <div class="flex items-center justify-between pt-4 border-t border-rose-50">
+                            <div>
+                                <span class="font-serif-ankavera text-2xl font-light text-ankavera-700">
+                                    @product.Price.ToString("N0")₺
+                                </span>
+                            </div>
+                            <a href="#"
+                               class="btn-outline-ankavera text-xs font-medium tracking-wider px-5 py-2.5 rounded-full">
+                                İncele
+                            </a>
+                        </div>
+                    </div>
+                </article>
+            }
+        </div>
+
+        <!-- Tümünü Gör Butonu -->
+        <div class="text-center mt-14">
+            <a href="#"
+               class="inline-flex items-center gap-3 btn-ankavera text-white font-medium tracking-wider px-12 py-4 rounded-full text-sm">
+                Tüm Ürünleri Gör
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                    <polyline points="12 5 19 12 12 19" />
+                </svg>
+            </a>
+        </div>
+    </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     5. BANNER: ÖN PLANA ÇIKAN MESAJ
+══════════════════════════════════════════════════════════ -->
+<section class="relative overflow-hidden py-24"
+         style="background: linear-gradient(135deg, #3d1a2a 0%, #5c1229 50%, #3d1a2a 100%);">
+
+    <!-- Dekoratif Arka Plan -->
+    <div class="absolute inset-0 opacity-10 pointer-events-none"
+         style="background-image: radial-gradient(circle at 30% 50%, #f7698a 0%, transparent 50%), radial-gradient(circle at 70% 50%, #ff8c62 0%, transparent 50%);"></div>
+
+    <div class="relative max-w-4xl mx-auto px-6 text-center">
+        <p class="text-rose-400/60 text-xs font-medium tracking-widest uppercase mb-4">✦ Ankavera Farkı ✦</p>
+        <h2 class="font-serif-ankavera text-4xl md:text-6xl text-white font-light leading-tight mb-6 tracking-wide">
+            Her Kadın<br />
+            <span style="background: linear-gradient(90deg, #ff94ac, #f7698a, #ffb08e); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                Bir Anka Kuşudur
+            </span>
+        </h2>
+        <p class="text-rose-300/60 text-base font-light leading-relaxed max-w-xl mx-auto mb-10">
+            Kendini yenileyen, güçlü ve zarifin. Ankavera; içindeki o ateşi, premium dokular ve özgün tasarımlarla buluşturuyor.
+        </p>
+        <a href="#"
+           class="inline-flex items-center gap-2 text-white font-medium tracking-widest text-sm uppercase border-b border-rose-500 pb-0.5 hover:border-white transition-colors">
+            Hikayemizi Keşfet
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
+            </svg>
+        </a>
+    </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     6. İADE UYARISI (Sayfa içi, şık blok)
+══════════════════════════════════════════════════════════ -->
+<section class="py-8 bg-rose-50/80 border-y border-rose-100">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col md:flex-row items-center gap-4 text-center md:text-left">
+            <div class="w-12 h-12 rounded-full bg-rose-100 flex items-center justify-center flex-shrink-0 mx-auto md:mx-0">
+                <svg class="w-5 h-5 text-ankavera-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="8" x2="12" y2="12" />
+                    <line x1="12" y1="16" x2="12.01" y2="16" />
+                </svg>
+            </div>
+            <div>
+                <p class="text-ankavera-700 font-semibold text-sm tracking-wide mb-0.5">
+                    Hijyen & İade Politikası
+                </p>
+                <p class="text-rose-500/70 text-xs font-light leading-relaxed">
+                    Hijyen koşulları gereği iç giyim ürünlerinde <strong class="text-ankavera-600 font-medium">iade ve değişim kesinlikle yapılmamaktadır.</strong>
+                    Sağlığınız ve güvenliğiniz için bu politikayı uygulamaktayız. Doğru beden seçimi için beden rehberimizi incelemenizi öneririz.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     7. INSTAGRAM / GALERİ KESİMİ
+══════════════════════════════════════════════════════════ -->
+<section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <p class="text-rose-400 text-xs font-medium tracking-widest uppercase mb-3">✦ @@ankavera ✦</p>
+            <h2 class="font-serif-ankavera text-4xl font-light text-ankavera-800 tracking-wide">
+                Instagram'dan İlham Al
+            </h2>
+        </div>
+
+        <!-- 6 Kare Galeri -->
+        <div class="grid grid-cols-3 md:grid-cols-6 gap-2">
+            @{
+                var galleryImages = new[]
+                {
+                    "https://images.unsplash.com/photo-1617922001439-4a2e6562f328?w=400&q=75",
+                    "https://images.unsplash.com/photo-1604671368394-2240d0b1bb6c?w=400&q=75",
+                    "https://images.unsplash.com/photo-1631947430066-48c30d57b943?w=400&q=75",
+                    "https://images.unsplash.com/photo-1616627547584-bf28cee262db?w=400&q=75",
+                    "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=400&q=75",
+                    "https://images.unsplash.com/photo-1609081219090-a6d81d3085bf?w=400&q=75",
+                };
+            }
+            @foreach (var imgSrc in galleryImages)
+            {
+                <a href="#" class="group relative aspect-square overflow-hidden">
+                    <img src="@imgSrc" alt="Ankavera Instagram"
+                         class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500" />
+                    <div class="absolute inset-0 bg-ankavera-800/0 group-hover:bg-ankavera-800/40 transition-all duration-300 flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white opacity-0 group-hover:opacity-100 transition-opacity" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                        </svg>
+                    </div>
+                </a>
+            }
+        </div>
+
+        <div class="text-center mt-8">
+            <a href="#"
+               class="btn-outline-ankavera inline-flex items-center gap-2 text-sm font-medium tracking-wider px-8 py-3 rounded-full">
+                Bizi Instagram'da Takip Et
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073z" />
+                </svg>
+            </a>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        // ── Ürün Kartı: Hover Scale Düzeltme ──
+        document.querySelectorAll('.product-card img').forEach(img => {
+            img.closest('.product-card').addEventListener('mouseenter', () => {
+                img.style.transform = 'scale(1.08)';
+            });
+            img.closest('.product-card').addEventListener('mouseleave', () => {
+                img.style.transform = 'scale(1)';
+            });
+        });
+
+        // ── Smooth Scroll ──
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (href && href.length > 1) {
+                    const target = document.querySelector(href);
+                    if (target) {
+                        e.preventDefault();
+                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }
+            });
+        });
+    </script>
+}

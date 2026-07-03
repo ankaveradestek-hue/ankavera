@@ -1,0 +1,80 @@
+@{
+    ViewData["Title"] = "Siparişiniz Alındı";
+    Layout = "_Layout";
+    var code = ViewData["TrackingCode"] as string;
+    var mailError = (ViewData["MailError"] as string) == "true";
+}
+
+<div style="min-height:calc(100vh - 70px); background:#fff5f7; padding:4rem 1rem;
+    display:flex; align-items:center; justify-content:center;">
+    <div style="max-width:520px; width:100%; text-align:center;
+        background:white; border-radius:2rem; padding:3.5rem 2.25rem;
+        box-shadow:0 10px 45px rgba(225,29,72,0.1);">
+
+        <div style="width:88px; height:88px; margin:0 auto 1.5rem;
+            border-radius:50%; display:flex; align-items:center; justify-content:center;
+            background:linear-gradient(135deg,#f472b6,#e11d48,#be185d);
+            box-shadow:0 10px 30px rgba(225,29,72,0.35); font-size:2.75rem;">
+            ✅
+        </div>
+
+        <p style="font-size:0.7rem; font-weight:500; letter-spacing:0.25em;
+            text-transform:uppercase; color:#f43f7a; margin-bottom:0.6rem;">
+            ✦ Teşekkürler ✦
+        </p>
+        <h1 style="font-family:'Cormorant Garamond',serif; font-size:2.4rem;
+            font-weight:300; color:#881337; margin-bottom:0.85rem;">
+            Siparişiniz Alındı!
+        </h1>
+        <p style="color:#7c3f60; font-size:0.9rem; font-weight:300;
+            line-height:1.7; margin-bottom:2rem;">
+            Siparişiniz başarıyla oluşturuldu. Onay ve takip bilgilerini içeren
+            e-postayı kısa süre içinde alacaksınız.
+        </p>
+
+        @if (!string.IsNullOrEmpty(code))
+        {
+            <div style="background:linear-gradient(135deg,#fff5f7,#fce7f3);
+                border:1px dashed #f9a8d4; border-radius:1rem;
+                padding:1.25rem; margin-bottom:1.75rem;">
+                <p style="font-size:0.68rem; letter-spacing:0.18em; text-transform:uppercase;
+                    color:#be7094; font-weight:600; margin-bottom:0.4rem;">
+                    Kargo Takip Kodu
+                </p>
+                <p style="font-family:'Courier New',monospace; font-size:1.4rem;
+                    font-weight:700; color:#be185d; letter-spacing:0.06em;">
+                    @code
+                </p>
+            </div>
+        }
+
+        @if (mailError)
+        {
+            <div style="background:#fff7ed; border:1px solid #fed7aa;
+                border-left:3px solid #f97316; border-radius:0.75rem;
+                padding:0.85rem 1rem; margin-bottom:1.75rem;
+                color:#c2410c; font-size:0.78rem; line-height:1.6;">
+                ⚠️ Siparişiniz oluşturuldu ancak onay e-postası şu an gönderilemedi.
+                Takip kodunuzu not almanızı öneririz.
+            </div>
+        }
+
+        <div style="display:flex; gap:0.75rem; justify-content:center; flex-wrap:wrap;">
+            <a asp-controller="Collections" asp-action="Index"
+               style="display:inline-block; padding:0.85rem 2rem;
+                background:linear-gradient(135deg,#f472b6,#e11d48,#be185d);
+                color:white; border-radius:9999px; font-size:0.78rem;
+                font-weight:600; letter-spacing:0.1em; text-transform:uppercase;
+                text-decoration:none; box-shadow:0 6px 20px rgba(225,29,72,0.3);">
+                Alışverişe Devam Et
+            </a>
+            <a asp-controller="Home" asp-action="Index"
+               style="display:inline-block; padding:0.85rem 2rem;
+                background:transparent; border:1.5px solid #fce7f3;
+                color:#881337; border-radius:9999px; font-size:0.78rem;
+                font-weight:500; text-decoration:none;">
+                Ana Sayfa
+            </a>
+        </div>
+    </div>
+</div>

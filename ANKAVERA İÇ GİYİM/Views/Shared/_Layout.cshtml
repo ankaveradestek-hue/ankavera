@@ -1,0 +1,758 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] — ANKAVERA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap"
+          rel="stylesheet" />
+    <style>
+        * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        }
+
+        body {
+        font-family: 'Montserrat', sans-serif;
+        background: #fff5f7;
+        color: #3d1a2a;
+        }
+
+        .font-serif {
+        font-family: 'Cormorant Garamond', Georgia, serif;
+        }
+
+        /* ── Navbar ── */
+        .navbar {
+        position: sticky;
+        top: 0;
+        z-index: 999;
+        background: rgba(255, 245, 247, 0.95);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-bottom: 1px solid rgba(244, 63, 122, 0.12);
+        box-shadow: 0 2px 20px rgba(225, 29, 72, 0.06);
+        }
+
+        .navbar-inner {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 0 2rem;
+        height: 70px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        }
+
+        /* ── Nav Links ── */
+        .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 1.75rem;
+        list-style: none;
+        }
+
+        .nav-links a {
+        font-size: 0.73rem;
+        font-weight: 500;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #5c1229;
+        text-decoration: none;
+        position: relative;
+        padding-bottom: 2px;
+        transition: color 0.25s;
+        white-space: nowrap;
+        }
+
+        .nav-links a::after {
+        content: '';
+        position: absolute;
+        bottom: -3px;
+        left: 0;
+        width: 0;
+        height: 1.5px;
+        background: linear-gradient(90deg, #f472b6, #be185d);
+        transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+        color: #e11d48;
+        }
+
+        .nav-links a:hover::after {
+        width: 100%;
+        }
+
+        /* ── Butonlar ── */
+        .btn-rose {
+        background: linear-gradient(135deg, #f472b6, #e11d48, #be185d);
+        color: white;
+        border: none;
+        border-radius: 9999px;
+        cursor: pointer;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        box-shadow: 0 4px 15px rgba(225, 29, 72, 0.3);
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        }
+
+        .btn-rose:hover {
+        box-shadow: 0 6px 22px rgba(225, 29, 72, 0.5);
+        transform: translateY(-1px);
+        }
+
+        .btn-ghost {
+        background: transparent;
+        border: 1.5px solid #fce7f3;
+        color: #881337;
+        border-radius: 9999px;
+        cursor: pointer;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 500;
+        transition: all 0.25s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        }
+
+        .btn-ghost:hover {
+        background: #fce7f3;
+        border-color: #f9a8d4;
+        }
+
+        /* ── İkon Buton ── */
+        .icon-btn {
+        position: relative;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #881337;
+        transition: background 0.2s;
+        text-decoration: none;
+        flex-shrink: 0;
+        }
+
+        .icon-btn:hover {
+        background: #fce7f3;
+        }
+
+        .icon-btn svg {
+        width: 20px;
+        height: 20px;
+        }
+
+        /* ── Badge ── */
+        .badge {
+        position: absolute;
+        top: 0;
+        right: 0;
+        min-width: 18px;
+        height: 18px;
+        border-radius: 9999px;
+        background: linear-gradient(135deg, #f472b6, #be185d);
+        color: white;
+        font-size: 0.62rem;
+        font-weight: 700;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 0 3px;
+        border: 1.5px solid white;
+        }
+
+        /* ── Dropdown ── */
+        .dropdown-wrap {
+        position: relative;
+        }
+
+        .dropdown-menu {
+        position: absolute;
+        top: calc(100% + 10px);
+        right: 0;
+        min-width: 180px;
+        background: white;
+        border-radius: 1rem;
+        border: 1px solid #fce7f3;
+        box-shadow: 0 15px 50px rgba(225, 29, 72, 0.15);
+        padding: 0.5rem;
+        display: none;
+        z-index: 1000;
+        animation: fadeDown 0.2s ease;
+        }
+
+        .dropdown-menu.open {
+        display: block;
+        }
+
+        @@keyframes fadeDown {
+        from {
+        opacity: 0;
+        transform: translateY(-8px);
+        }
+
+        to {
+        opacity: 1;
+        transform: translateY(0);
+        }
+        }
+
+        .dropdown-item {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.6rem 0.85rem;
+        border-radius: 0.6rem;
+        font-size: 0.78rem;
+        color: #881337;
+        text-decoration: none;
+        transition: background 0.2s;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        width: 100%;
+        text-align: left;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 400;
+        }
+
+        .dropdown-item:hover {
+        background: #fff5f7;
+        }
+
+        .dropdown-item.danger {
+        color: #e11d48;
+        }
+
+        .dropdown-divider {
+        height: 1px;
+        background: #fce7f3;
+        margin: 0.3rem 0;
+        }
+
+        /* ── Mobile Menü ── */
+        .mobile-menu {
+        display: none;
+        flex-direction: column;
+        background: white;
+        border-top: 1px solid #fce7f3;
+        padding: 0.75rem 1rem;
+        }
+
+        .mobile-menu.open {
+        display: flex;
+        }
+
+        .mobile-menu a {
+        padding: 0.75rem 0.85rem;
+        border-radius: 0.75rem;
+        font-size: 0.82rem;
+        font-weight: 500;
+        color: #881337;
+        text-decoration: none;
+        transition: background 0.2s;
+        letter-spacing: 0.04em;
+        }
+
+        .mobile-menu a:hover {
+        background: #fff5f7;
+        }
+
+        .mobile-divider {
+        height: 1px;
+        background: #fce7f3;
+        margin: 0.4rem 0;
+        }
+
+        /* ── Toast ── */
+        .toast {
+        position: fixed;
+        bottom: 2rem;
+        right: 1.5rem;
+        background: linear-gradient(135deg, #3d1a2a, #5c1229);
+        color: white;
+        padding: 0.9rem 1.25rem;
+        border-radius: 1rem;
+        font-size: 0.82rem;
+        font-weight: 400;
+        box-shadow: 0 10px 35px rgba(61, 26, 42, 0.35);
+        z-index: 9999;
+        max-width: 320px;
+        transform: translateY(80px);
+        opacity: 0;
+        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .toast.show {
+        transform: translateY(0);
+        opacity: 1;
+        }
+
+        /* ── Scroll Top ── */
+        .scroll-top {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        width: 44px;
+        height: 44px;
+        z-index: 500;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s;
+        }
+
+        .scroll-top.show {
+        opacity: 1;
+        pointer-events: all;
+        }
+
+        /* ── Responsive ── */
+        @@media (max-width: 900px) {
+        .nav-center {
+        display: none !important;
+        }
+
+        .hamburger {
+        display: flex !important;
+        }
+        }
+
+        @@media (min-width: 901px) {
+        .hamburger {
+        display: none !important;
+        }
+
+        .mobile-menu {
+        display: none !important;
+        }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ═══════════════════════════════════════════════
+     NAVBAR
+═══════════════════════════════════════════════ -->
+    <header class="navbar">
+        <div class="navbar-inner">
+
+            <!-- ── Logo ── -->
+            <a asp-controller="Home" asp-action="Index"
+               style="display:flex; align-items:center; gap:0.6rem;
+                text-decoration:none; flex-shrink:0;">
+                <img src="/images/WhatsApp Image 2026-06-21 at 21.07.51.jpeg"
+                     alt="Ankavera"
+                     style="height:48px; width:auto; object-fit:contain;
+                border-radius:9px;
+                filter:drop-shadow(0 2px 8px rgba(225,29,72,0.18));"
+                     onerror="this.style.display='none';
+                document.getElementById('brand-text').style.display='block';" />
+                <span id="brand-text"
+                      style="display:none; font-family:'Cormorant Garamond',serif;
+                    font-size:1.55rem; font-weight:300;
+                    color:#881337; letter-spacing:0.14em;">
+                    Ankavera
+                </span>
+            </a>
+
+            <!-- ── Orta Nav (Masaüstü) ── -->
+            <nav class="nav-center" style="display:flex;">
+                <ul class="nav-links">
+                    <li>
+                        <a asp-controller="Home" asp-action="Index">Ana Sayfa</a>
+                    </li>
+                    <li>
+                        <a asp-controller="Collections" asp-action="Index">Koleksiyonlar</a>
+                    </li>
+                    <li>
+                        <a asp-controller="Collections" asp-action="Index"
+                           asp-route-category="Bridal">Bridal</a>
+                    </li>
+                    <li>
+                        <a asp-controller="Collections" asp-action="Index"
+                           asp-route-category="Setler">Setler</a>
+                    </li>
+                    <li>
+                        <a asp-controller="About" asp-action="Index">Hakkımızda</a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- ── Sağ Alan ── -->
+            <div style="display:flex; align-items:center; gap:0.3rem;">
+
+                <!-- Favori -->
+                <a asp-controller="Favorite" asp-action="Index"
+                   class="icon-btn" title="Favorilerim">
+                    <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                    </svg>
+                    <span id="fav-badge" class="badge">0</span>
+                </a>
+
+                <!-- Sepet -->
+                <a asp-controller="Cart" asp-action="Index"
+                   class="icon-btn" title="Sepetim">
+                    <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                        <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+                        <line x1="3" y1="6" x2="21" y2="6" />
+                        <path d="M16 10a4 4 0 0 1-8 0" />
+                    </svg>
+                    <span id="cart-badge" class="badge">0</span>
+                </a>
+
+                <!-- Kullanıcı Durumu -->
+                @if (User.Identity != null && User.Identity.IsAuthenticated)
+                {
+                    <!-- Giriş yapılmış -->
+                    <div class="dropdown-wrap" id="user-wrap">
+                        <button onclick="toggleDropdown()"
+                                style="display:flex; align-items:center; gap:0.5rem;
+                            padding:0.4rem 0.9rem 0.4rem 0.5rem;
+                            border-radius:9999px; border:1.5px solid #fce7f3;
+                            background:white; cursor:pointer;
+                            font-size:0.75rem; color:#881337;
+                            font-weight:500; font-family:'Montserrat',sans-serif;
+                            transition:all 0.25s; margin-left:0.4rem;">
+                            <span style="width:30px; height:30px; border-radius:50%;
+                                background:linear-gradient(135deg,#f472b6,#be185d);
+                                color:white; display:flex; align-items:center;
+                                justify-content:center; font-size:0.78rem;
+                                font-weight:700; flex-shrink:0;">
+                                @(User.Identity.Name?.Length > 0
+                                    ? User.Identity.Name.Substring(0, 1).ToUpper()
+                                    : "U")
+                            </span>
+                            <svg width="12" height="12" fill="none" stroke="currentColor"
+                                 stroke-width="2.5" viewBox="0 0 24 24">
+                                <polyline points="6 9 12 15 18 9" />
+                            </svg>
+                        </button>
+
+                        <div id="user-dropdown" class="dropdown-menu">
+                            <div style="padding:0.6rem 0.85rem 0.75rem; border-bottom:1px solid #fce7f3; margin-bottom:0.3rem;">
+                                <p style="font-size:0.8rem; font-weight:600; color:#881337; margin-bottom:0.15rem;">
+                                    @User.Identity.Name
+                                </p>
+                                <p style="font-size:0.7rem; color:#d4789a; font-weight:300;">
+                                    @(User.IsInRole("Admin") ? "👑 Yönetici" : "👤 Üye")
+                                </p>
+                            </div>
+
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <a asp-controller="Admin" asp-action="Index"
+                                   class="dropdown-item">
+                                    👑 Admin Paneli
+                                </a>
+                            }
+
+                            <a asp-controller="Favorite" asp-action="Index"
+                               class="dropdown-item">
+                                🤍 Favorilerim
+                            </a>
+                            <a asp-controller="Cart" asp-action="Index"
+                               class="dropdown-item">
+                                🛒 Sepetim
+                            </a>
+
+                            <div class="dropdown-divider"></div>
+
+                            <form asp-controller="Account" asp-action="Logout" method="post">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="dropdown-item danger">
+                                    🚪 Çıkış Yap
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <!-- Giriş yapılmamış -->
+                    <a asp-controller="Account" asp-action="Login"
+                       class="btn-ghost"
+                       style="padding:0.45rem 1.1rem; font-size:0.75rem;
+                        font-weight:500; margin-left:0.4rem;">
+                        Giriş
+                    </a>
+                    <a asp-controller="Account" asp-action="Register"
+                       class="btn-rose"
+                       style="padding:0.45rem 1.1rem; font-size:0.75rem;
+                        margin-left:0.3rem;">
+                        Kayıt Ol
+                    </a>
+                }
+
+                <!-- Hamburger -->
+                <button class="hamburger icon-btn"
+                        onclick="toggleMobile()"
+                        style="display:none; margin-left:0.3rem;">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <line x1="3" y1="6" x2="21" y2="6" />
+                        <line x1="3" y1="12" x2="21" y2="12" />
+                        <line x1="3" y1="18" x2="21" y2="18" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- ── Mobil Menü ── -->
+        <div id="mobile-menu" class="mobile-menu">
+            <a asp-controller="Home" asp-action="Index">🏠 Ana Sayfa</a>
+            <a asp-controller="Collections" asp-action="Index">✨ Koleksiyonlar</a>
+            <a asp-controller="Collections" asp-action="Index"
+               asp-route-category="Bridal">💍 Bridal</a>
+            <a asp-controller="Collections" asp-action="Index"
+               asp-route-category="Setler">🎀 Setler</a>
+            <a asp-controller="About" asp-action="Index">💌 Hakkımızda</a>
+            <div class="mobile-divider"></div>
+            <a asp-controller="Favorite" asp-action="Index">🤍 Favorilerim</a>
+            <a asp-controller="Cart" asp-action="Index">🛒 Sepetim</a>
+            @if (User.Identity != null && User.Identity.IsAuthenticated)
+            {
+                <div class="mobile-divider"></div>
+                @if (User.IsInRole("Admin"))
+                {
+                    <a asp-controller="Admin" asp-action="Index">👑 Admin Paneli</a>
+                }
+                <form asp-controller="Account" asp-action="Logout" method="post">
+                    @Html.AntiForgeryToken()
+                    <button type="submit"
+                            style="width:100%; padding:0.75rem 0.85rem; border-radius:0.75rem;
+                        font-size:0.82rem; font-weight:500; color:#e11d48;
+                        background:transparent; border:none; cursor:pointer;
+                        text-align:left; font-family:'Montserrat',sans-serif;">
+                        🚪 Çıkış Yap
+                    </button>
+                </form>
+            }
+            else
+            {
+                <div class="mobile-divider"></div>
+                <a asp-controller="Account" asp-action="Login">Giriş Yap</a>
+                <a asp-controller="Account" asp-action="Register">Kayıt Ol</a>
+            }
+        </div>
+    </header>
+
+    <!-- ─── Success Toast ─── -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div id="toast" class="toast">✓ @TempData["SuccessMessage"]</div>
+        <script>
+            (function(){
+            var t = document.getElementById('toast');
+            if(!t) return;
+            setTimeout(function(){ t.classList.add('show'); }, 150);
+            setTimeout(function(){ t.classList.remove('show'); }, 3800);
+            })();
+        </script>
+    }
+
+    <!-- ─── Main ─── -->
+    <main>
+        @RenderBody()
+    </main>
+
+    <!-- ─── Footer ─── -->
+    <footer>
+        <div style="height:1px;
+            background:linear-gradient(90deg,transparent,#f7c5b0,#e8476d,#f7c5b0,transparent);">
+        </div>
+        <div style="background:linear-gradient(180deg,#3d1a2a 0%,#2a0f1c 100%);
+            padding:3rem 2rem 1.5rem;">
+
+            <!-- Hijyen Uyarısı -->
+            <div style="max-width:900px; margin:0 auto 2.5rem;
+                background:rgba(232,71,109,0.1);
+                border:1px solid rgba(232,71,109,0.2);
+                border-left:3px solid #e8476d;
+                border-radius:0.75rem; padding:1rem 1.25rem;
+                display:flex; gap:0.75rem; align-items:flex-start;">
+                <svg width="18" height="18" fill="none" stroke="#f87171"
+                     stroke-width="1.8" viewBox="0 0 24 24" style="flex-shrink:0; margin-top:1px;">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                    <line x1="12" y1="9" x2="12" y2="13" />
+                    <line x1="12" y1="17" x2="12.01" y2="17" />
+                </svg>
+                <p style="color:#fda4af; font-size:0.8rem; font-weight:300; line-height:1.6;">
+                    <strong style="color:#fca5a5;">Hijyen Politikası:</strong>
+                    Hijyen koşulları gereği iç giyim ürünlerinde
+                    <strong style="color:white;">iade ve değişim kesinlikle yapılmamaktadır.</strong>
+                </p>
+            </div>
+
+            <!-- Grid -->
+            <div style="max-width:1100px; margin:0 auto;
+                display:grid;
+                grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+                gap:2rem; padding-bottom:2rem;
+                border-bottom:1px solid rgba(255,255,255,0.06);">
+                <div>
+                    <p style="font-family:'Cormorant Garamond',serif; font-size:1.5rem;
+                        font-weight:300; color:#fda4af; letter-spacing:0.12em;
+                        margin-bottom:0.75rem;">
+                        Ankavera
+                    </p>
+                    <p style="color:rgba(253,164,175,0.55); font-size:0.78rem;
+                        font-weight:300; line-height:1.7;">
+                        Feminen zarafetin ve lüksün buluştuğu adres.
+                    </p>
+                </div>
+                <div>
+                    <p style="font-size:0.68rem; font-weight:700; letter-spacing:0.18em;
+                        text-transform:uppercase; color:#fda4af; margin-bottom:1rem;">
+                        Keşfet
+                    </p>
+                    @foreach (var item in new[]{
+                    ("Koleksiyonlar", "/Collections"),
+                    ("Bridal", "/Collections?category=Bridal"),
+                    ("Setler", "/Collections?category=Setler"),
+                    ("Hakkımızda", "/About"),
+                })
+                    {
+                        <a href="@item.Item2"
+                           style="display:block; color:rgba(253,164,175,0.55); font-size:0.78rem;
+                            font-weight:300; text-decoration:none; margin-bottom:0.5rem;
+                            transition:color 0.2s;"
+                           onmouseover="this.style.color='#fda4af'"
+                           onmouseout="this.style.color='rgba(253,164,175,0.55)'">
+                            › @item.Item1
+                        </a>
+                    }
+                </div>
+                <div>
+                    <p style="font-size:0.68rem; font-weight:700; letter-spacing:0.18em;
+                        text-transform:uppercase; color:#fda4af; margin-bottom:1rem;">
+                        Yasal
+                    </p>
+                    @foreach (var doc in new[]{
+                    ("Mesafeli Satış Sözleşmesi", "/Legal/Index/mesafeli"),
+                    ("Ön Bilgilendirme Formu", "/Legal/Index/onbilgi"),
+                    ("Kullanım & Üyelik", "/Legal/Index/kullanim"),
+                    ("KVKK Aydınlatma Metni", "/Legal/Index/kvkk"),
+                    ("Gizlilik & Çerez Politikası", "/Legal/Index/gizlilik"),
+                    ("İptal & İade Koşulları", "/Legal/Index/iade"),
+                })
+                    {
+                        <a href="@doc.Item2"
+                           style="display:block; color:rgba(253,164,175,0.55); font-size:0.78rem;
+                            font-weight:300; text-decoration:none; margin-bottom:0.5rem;
+                            transition:color 0.2s;"
+                           onmouseover="this.style.color='#fda4af'"
+                           onmouseout="this.style.color='rgba(253,164,175,0.55)'">
+                            › @doc.Item1
+                        </a>
+                    }
+                </div>
+                <div>
+                    <p style="font-size:0.68rem; font-weight:700; letter-spacing:0.18em;
+                        text-transform:uppercase; color:#fda4af; margin-bottom:1rem;">
+                        İletişim
+                    </p>
+                    <p style="color:rgba(253,164,175,0.55); font-size:0.78rem;
+                        font-weight:300; margin-bottom:0.5rem;">
+                        📞 +90 (536) 593 81 73
+                    </p>
+                    <p style="color:rgba(253,164,175,0.55); font-size:0.78rem;
+                        font-weight:300; margin-bottom:0.5rem;">
+                        📧 ankaveradestek@gmail.com
+                    </p>
+                    <p style="color:rgba(253,164,175,0.55); font-size:0.78rem; font-weight:300;">
+                        🕐 Hft İçi 09:00–18:00
+                    </p>
+                </div>
+            </div>
+
+            <div style="max-width:1100px; margin:1.25rem auto 0;
+                display:flex; justify-content:space-between;
+                align-items:center; flex-wrap:wrap; gap:0.75rem;">
+                <p style="color:rgba(253,164,175,0.35); font-size:0.7rem; font-weight:300;">
+                    © @DateTime.Now.Year Ankavera. Tüm hakları saklıdır.
+                </p>
+                <p style="color:rgba(253,164,175,0.35); font-size:0.7rem; font-weight:300;">
+                    🔒 SSL Güvenli Alışveriş
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ─── Yukarı Çık ─── -->
+    <button id="scrollTopBtn"
+            class="scroll-top btn-rose"
+            onclick="window.scrollTo({top:0,behavior:'smooth'})"
+            title="Yukarı Çık">
+        ↑
+    </button>
+
+    <!-- ═══════════════════ GLOBAL JS ═══════════════════ -->
+    <script>
+        // ── Dropdown ──
+        function toggleDropdown() {
+        document.getElementById('user-dropdown')
+        ?.classList.toggle('open');
+        }
+        document.addEventListener('click', function(e) {
+        var wrap = document.getElementById('user-wrap');
+        var dd   = document.getElementById('user-dropdown');
+        if (dd && wrap && !wrap.contains(e.target))
+        dd.classList.remove('open');
+        });
+
+        // ── Mobile Menu ──
+        function toggleMobile() {
+        document.getElementById('mobile-menu')
+        ?.classList.toggle('open');
+        }
+
+        // ── Scroll Top ──
+        window.addEventListener('scroll', function() {
+        var btn = document.getElementById('scrollTopBtn');
+        if (btn) btn.classList.toggle('show', window.scrollY > 500);
+        });
+
+        // ── Badge Güncelle ──
+        async function refreshBadges() {
+        try {
+        var [cr, fr] = await Promise.all([
+        fetch('/Cart/Count'),
+        fetch('/Favorite/Count')
+        ]);
+        var cd = await cr.json();
+        var fd = await fr.json();
+
+        var cb = document.getElementById('cart-badge');
+        var fb = document.getElementById('fav-badge');
+
+        if (cb) {
+        cb.textContent = cd.count;
+        cb.style.display = cd.count > 0 ? 'flex' : 'none';
+        }
+        if (fb) {
+        fb.textContent = fd.count;
+        fb.style.display = fd.count > 0 ? 'flex' : 'none';
+        }
+        } catch(e) {}
+        }
+        refreshBadges();
+    </script>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

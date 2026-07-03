@@ -1,0 +1,216 @@
+@model ANKAVERA_İÇ_GİYİM.Models.CheckoutViewModel
+@{
+    ViewData["Title"] = "Sipariş Bilgileri";
+    Layout = "_Layout";
+}
+
+<div style="min-height:calc(100vh - 70px); background:#fff5f7; padding:3rem 1rem;">
+    <div style="max-width:1000px; margin:0 auto;">
+
+        <!-- Başlık -->
+        <div style="text-align:center; margin-bottom:2.5rem;">
+            <p style="font-size:0.7rem; font-weight:500; letter-spacing:0.25em;
+                text-transform:uppercase; color:#f43f7a; margin-bottom:0.6rem;">
+                ✦ Son Adım ✦
+            </p>
+            <h1 style="font-family:'Cormorant Garamond',serif; font-size:2.75rem;
+                font-weight:300; color:#881337; letter-spacing:0.04em;">
+                Sipariş Bilgileri
+            </h1>
+            <div style="width:2.5rem; height:1px; margin:0.75rem auto;
+                background:linear-gradient(90deg,transparent,#f43f7a,transparent);">
+            </div>
+        </div>
+
+        <form asp-controller="Cart" asp-action="Checkout" method="post">
+            @Html.AntiForgeryToken()
+
+            <div style="display:flex; gap:1.5rem; flex-wrap:wrap; align-items:flex-start;">
+
+                <!-- ── Sol: Teslimat Formu ── -->
+                <div style="flex:1; min-width:300px;">
+                    <div style="background:white; border-radius:1.5rem; padding:2rem;
+                        box-shadow:0 4px 18px rgba(225,29,72,0.07);">
+
+                        <h2 style="font-family:'Cormorant Garamond',serif; font-size:1.4rem;
+                            font-weight:400; color:#881337; margin-bottom:1.5rem;
+                            padding-bottom:0.75rem; border-bottom:1px solid #fce7f3;">
+                            Teslimat Bilgileri
+                        </h2>
+
+                        <div asp-validation-summary="ModelOnly"
+                             style="color:#e11d48; font-size:0.8rem; margin-bottom:1rem;"></div>
+
+                        <!-- Ad Soyad -->
+                        <div style="margin-bottom:1.1rem;">
+                            <label asp-for="CustomerName"
+                                   style="display:block; font-size:0.75rem; font-weight:600;
+                                    color:#881337; margin-bottom:0.4rem; letter-spacing:0.03em;">
+                                Ad Soyad
+                            </label>
+                            <input asp-for="CustomerName" placeholder="Örn. Zeynep Yılmaz"
+                                   class="ank-input" />
+                            <span asp-validation-for="CustomerName"
+                                  style="color:#e11d48; font-size:0.72rem;"></span>
+                        </div>
+
+                        <!-- E-posta -->
+                        <div style="margin-bottom:1.1rem;">
+                            <label asp-for="CustomerEmail"
+                                   style="display:block; font-size:0.75rem; font-weight:600;
+                                    color:#881337; margin-bottom:0.4rem; letter-spacing:0.03em;">
+                                E-posta <span style="color:#f43f7a;">(Sipariş onayı buraya gönderilir)</span>
+                            </label>
+                            <input asp-for="CustomerEmail" type="email" placeholder="ornek@mail.com"
+                                   class="ank-input" />
+                            <span asp-validation-for="CustomerEmail"
+                                  style="color:#e11d48; font-size:0.72rem;"></span>
+                        </div>
+
+                        <!-- Telefon -->
+                        <div style="margin-bottom:1.1rem;">
+                            <label asp-for="PhoneNumber"
+                                   style="display:block; font-size:0.75rem; font-weight:600;
+                                    color:#881337; margin-bottom:0.4rem; letter-spacing:0.03em;">
+                                Telefon
+                            </label>
+                            <input asp-for="PhoneNumber" placeholder="05XX XXX XX XX"
+                                   class="ank-input" />
+                            <span asp-validation-for="PhoneNumber"
+                                  style="color:#e11d48; font-size:0.72rem;"></span>
+                        </div>
+
+                        <!-- Adres -->
+                        <div style="margin-bottom:1.1rem;">
+                            <label asp-for="ShippingAddress"
+                                   style="display:block; font-size:0.75rem; font-weight:600;
+                                    color:#881337; margin-bottom:0.4rem; letter-spacing:0.03em;">
+                                Adres
+                            </label>
+                            <textarea asp-for="ShippingAddress" rows="3"
+                                      placeholder="Mahalle, cadde, sokak, kapı no…"
+                                      class="ank-input" style="resize:vertical;"></textarea>
+                            <span asp-validation-for="ShippingAddress"
+                                  style="color:#e11d48; font-size:0.72rem;"></span>
+                        </div>
+
+                        <!-- Şehir -->
+                        <div>
+                            <label asp-for="City"
+                                   style="display:block; font-size:0.75rem; font-weight:600;
+                                    color:#881337; margin-bottom:0.4rem; letter-spacing:0.03em;">
+                                Şehir
+                            </label>
+                            <input asp-for="City" placeholder="Örn. İstanbul"
+                                   class="ank-input" />
+                            <span asp-validation-for="City"
+                                  style="color:#e11d48; font-size:0.72rem;"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── Sağ: Özet ── -->
+                <div style="width:300px; flex-shrink:0;">
+                    <div style="background:white; border-radius:1.5rem; padding:1.5rem;
+                        box-shadow:0 4px 18px rgba(225,29,72,0.07);
+                        position:sticky; top:90px;">
+
+                        <h2 style="font-family:'Cormorant Garamond',serif; font-size:1.25rem;
+                            font-weight:400; color:#881337; margin-bottom:1.1rem;
+                            padding-bottom:0.75rem; border-bottom:1px solid #fce7f3;">
+                            Sipariş Özeti
+                        </h2>
+
+                        @foreach (var item in Model.Cart.Items)
+                        {
+                            <div style="display:flex; justify-content:space-between;
+                                gap:0.5rem; margin-bottom:0.6rem;">
+                                <span style="font-size:0.78rem; color:#7c3f60; font-weight:300;">
+                                    @item.Name <span style="color:#be7094;">× @item.Quantity</span>
+                                </span>
+                                <span style="font-size:0.78rem; color:#881337; font-weight:600;
+                                    white-space:nowrap;">
+                                    @item.Total.ToString("N0")₺
+                                </span>
+                            </div>
+                        }
+
+                        <div style="display:flex; justify-content:space-between;
+                            padding-top:0.75rem; margin-top:0.5rem; border-top:1px solid #fce7f3;">
+                            <span style="font-size:0.8rem; color:#be7094; font-weight:300;">Ara Toplam</span>
+                            <span style="font-size:0.8rem; color:#881337; font-weight:500;">
+                                @Model.Cart.Subtotal.ToString("N0")₺
+                            </span>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; margin-top:0.5rem;">
+                            <span style="font-size:0.8rem; color:#be7094; font-weight:300;">Kargo</span>
+                            <span style="font-size:0.8rem; font-weight:500;
+                                color:@(Model.Cart.Shipping == 0 ? "#22c55e" : "#881337")">
+                                @(Model.Cart.Shipping == 0 ? "Ücretsiz 🎉" : $"{Model.Cart.Shipping:N2}₺")
+                            </span>
+                        </div>
+
+                        <div style="display:flex; justify-content:space-between;
+                            align-items:center; padding-top:0.9rem;
+                            border-top:1px solid #fce7f3; margin-top:0.75rem; margin-bottom:1.1rem;">
+                            <span style="font-family:'Cormorant Garamond',serif;
+                                font-size:1.1rem; font-weight:500; color:#881337;">Toplam</span>
+                            <span style="font-family:'Cormorant Garamond',serif;
+                                font-size:1.45rem; font-weight:600; color:#be185d;">
+                                @Model.Cart.GrandTotal.ToString("N0")₺
+                            </span>
+                        </div>
+
+                        <button type="submit"
+                                style="width:100%; padding:0.9rem;
+                            background:linear-gradient(135deg,#f472b6,#e11d48,#be185d);
+                            color:white; border:none; border-radius:9999px;
+                            font-size:0.8rem; font-weight:700;
+                            letter-spacing:0.15em; text-transform:uppercase;
+                            cursor:pointer; font-family:'Montserrat',sans-serif;
+                            box-shadow:0 6px 20px rgba(225,29,72,0.3); transition:all 0.3s;"
+                                onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 8px 28px rgba(225,29,72,0.45)'"
+                                onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 6px 20px rgba(225,29,72,0.3)'">
+                            Siparişi Onayla
+                        </button>
+
+                        <a asp-controller="Cart" asp-action="Index"
+                           style="display:block; text-align:center; margin-top:0.75rem;
+                            font-size:0.75rem; color:#f43f7a; text-decoration:none;">
+                            ‹ Sepete Dön
+                        </a>
+
+                        <p style="text-align:center; font-size:0.68rem; color:#f9a8d4;
+                            font-weight:300; margin-top:0.75rem;">
+                            🔒 Bilgileriniz güvende
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .ank-input {
+        width: 100%;
+        padding: 0.7rem 0.9rem;
+        border: 1.5px solid #fce7f3;
+        border-radius: 0.75rem;
+        font-size: 0.85rem;
+        font-family: 'Montserrat', sans-serif;
+        color: #3d1a2a;
+        background: #fffafb;
+        outline: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .ank-input:focus {
+        border-color: #f9a8d4;
+        box-shadow: 0 0 0 3px rgba(244, 63, 122, 0.1);
+    }
+    .ank-input::placeholder { color: #d4a0b4; }
+</style>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,219 @@
+﻿@model List<ANKAVERA_İÇ_GİYİM.Models.ApplicationUser>
+@{
+    ViewData["Title"] = "Admin Paneli";
+    Layout = "_Layout";
+    int total = (int)(ViewData["TotalUsers"] ?? 0);
+    int admins = (int)(ViewData["Admins"] ?? 0);
+    int members = (int)(ViewData["Members"] ?? 0);
+    int products = (int)(ViewData["TotalProducts"] ?? 0);
+    int active = (int)(ViewData["ActiveProducts"] ?? 0);
+}
+
+<div style="min-height:calc(100vh - 70px);background:#fff5f7;padding:2.5rem 1rem;">
+    <div style="max-width:1200px;margin:0 auto;">
+
+        <!-- Başlık -->
+        <div style="display:flex;align-items:center;justify-content:space-between;
+            flex-wrap:wrap;gap:1rem;margin-bottom:2rem;">
+            <div>
+                <p style="font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;
+                    color:#f43f7a;font-weight:500;margin-bottom:.3rem;">
+                    ✦ Yönetim Paneli ✦
+                </p>
+                <h1 style="font-family:'Cormorant Garamond',serif;font-size:2.25rem;
+                    font-weight:300;color:#881337;">
+                    Dashboard
+                </h1>
+            </div>
+            <!-- Hızlı Eylemler -->
+            <div style="display:flex;gap:.75rem;flex-wrap:wrap;">
+                <a href="/Admin/AddProduct"
+                   style="display:inline-flex;align-items:center;gap:.5rem;
+                    padding:.65rem 1.25rem;border-radius:9999px;
+                    background:linear-gradient(135deg,#f472b6,#e11d48,#be185d);
+                    color:white;font-size:.78rem;font-weight:600;
+                    letter-spacing:.08em;text-decoration:none;
+                    box-shadow:0 4px 15px rgba(225,29,72,.3);">
+                    ＋ Ürün Ekle
+                </a>
+                <a href="/Admin/Products"
+                   style="display:inline-flex;align-items:center;gap:.5rem;
+                    padding:.65rem 1.25rem;border-radius:9999px;
+                    border:1.5px solid #fce7f3;background:white;
+                    color:#881337;font-size:.78rem;font-weight:500;
+                    text-decoration:none;">
+                    📦 Ürünler
+                </a>
+                <a href="/Admin/Users"
+                   style="display:inline-flex;align-items:center;gap:.5rem;
+                    padding:.65rem 1.25rem;border-radius:9999px;
+                    border:1.5px solid #fce7f3;background:white;
+                    color:#881337;font-size:.78rem;font-weight:500;
+                    text-decoration:none;">
+                    👥 Kullanıcılar
+                </a>
+            </div>
+        </div>
+
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div style="background:#f0fdf4;border-left:3px solid #22c55e;
+                border-radius:.75rem;padding:.85rem 1rem;
+                margin-bottom:1.5rem;color:#15803d;font-size:.82rem;">
+                @TempData["SuccessMessage"]
+            </div>
+        }
+
+        <!-- İstatistik Kartları -->
+        <div style="display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+            gap:1.25rem;margin-bottom:2rem;">
+
+            @foreach (var card in new[]{
+            ("👥","Toplam Üye",    total.ToString(),    "#f472b6","#fdf2f8"),
+            ("👑","Admin",         admins.ToString(),   "#fb923c","#fff7ed"),
+            ("👤","Normal Üye",    members.ToString(),  "#a855f7","#fdf4ff"),
+            ("📦","Toplam Ürün",   products.ToString(), "#e11d48","#fff1f2"),
+            ("✅","Aktif Ürün",    active.ToString(),   "#22c55e","#f0fdf4"),
+        })
+            {
+                <div style="background:white;border-radius:1.25rem;padding:1.5rem;
+                    box-shadow:0 4px 18px rgba(225,29,72,.07);
+                    transition:transform .3s,box-shadow .3s;"
+                     onmouseover="this.style.transform='translateY(-4px)';
+                    this.style.boxShadow='0 12px 35px rgba(225,29,72,.12)'"
+                     onmouseout="this.style.transform='translateY(0)';
+                    this.style.boxShadow='0 4px 18px rgba(225,29,72,.07)'">
+                    <div style="display:flex;align-items:center;
+                        justify-content:space-between;margin-bottom:.75rem;">
+                        <span style="font-size:1.75rem;line-height:1;">@card.Item1</span>
+                        <span style="font-size:.65rem;font-weight:700;padding:.2rem .6rem;
+                            border-radius:9999px;letter-spacing:.08em;
+                            background:@card.Item5;color:@card.Item4;">
+                            ●
+                        </span>
+                    </div>
+                    <p style="font-family:'Cormorant Garamond',serif;font-size:2.25rem;
+                        font-weight:300;color:#881337;line-height:1;margin-bottom:.3rem;">
+                        @card.Item3
+                    </p>
+                    <p style="font-size:.75rem;color:#be7094;font-weight:300;">@card.Item2</p>
+                </div>
+            }
+        </div>
+        <!-- Siparişler Kutucuğu Başlangıcı -->
+        <a href="/Order" class="flex flex-col justify-center p-6 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md hover:bg-gray-50 transition-all duration-200 cursor-pointer">
+            <div class="flex items-center gap-4">
+                <!-- İkon Kısmı (Mavi yuvarlak içinde sepet/çanta) -->
+                <div class="flex items-center justify-center w-14 h-14 bg-blue-100 rounded-full">
+                    <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"></path>
+                    </svg>
+                </div>
+                <!-- Metin Kısmı -->
+                <div>
+                    <h3 class="text-xl font-bold text-gray-900">Siparişler</h3>
+                    <p class="mt-1 text-sm text-gray-500">Müşteri siparişlerini, adres ve tutarları yönetin.</p>
+                </div>
+            </div>
+        </a>
+        <!-- Siparişler Kutucuğu Bitişi -->
+        <!-- Hızlı Ürün Ekle Kartı -->
+        <div style="background:white;border-radius:1.5rem;padding:2rem;
+            box-shadow:0 4px 18px rgba(225,29,72,.07);margin-bottom:1.5rem;
+            background:linear-gradient(135deg,#fff5f7,white);
+            border:1px solid #fce7f3;">
+            <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
+                <div style="flex:1;min-width:200px;">
+                    <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;
+                        font-weight:400;color:#881337;margin-bottom:.4rem;">
+                        Hızlı Ürün Yönetimi
+                    </h2>
+                    <p style="font-size:.8rem;color:#be7094;font-weight:300;">
+                        Ürün ekleyin, düzenleyin veya yönetin.
+                    </p>
+                </div>
+                <div style="display:flex;gap:.75rem;flex-wrap:wrap;">
+                    <a href="/Admin/AddProduct"
+                       style="padding:.75rem 1.5rem;border-radius:9999px;
+                        background:linear-gradient(135deg,#f472b6,#e11d48);
+                        color:white;font-size:.8rem;font-weight:600;
+                        text-decoration:none;letter-spacing:.06em;">
+                        ＋ Yeni Ürün Ekle
+                    </a>
+                    <a href="/Admin/Products"
+                       style="padding:.75rem 1.5rem;border-radius:9999px;
+                        border:1.5px solid #fce7f3;background:white;
+                        color:#881337;font-size:.8rem;font-weight:500;
+                        text-decoration:none;">
+                        Tüm Ürünleri Gör →
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Son Kayıt Olan Üyeler -->
+        <div style="background:white;border-radius:1.5rem;overflow:hidden;
+            box-shadow:0 4px 18px rgba(225,29,72,.07);">
+            <div style="padding:1.1rem 1.5rem;border-bottom:1px solid #fce7f3;
+                display:flex;justify-content:space-between;align-items:center;">
+                <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;
+                    font-weight:400;color:#881337;">
+                    Son Kayıt Olan Üyeler
+                </h2>
+                <a href="/Admin/Users"
+                   style="font-size:.75rem;color:#f43f7a;text-decoration:none;font-weight:500;">
+                    Tümünü Gör →
+                </a>
+            </div>
+            <div style="overflow-x:auto;">
+                <table style="width:100%;border-collapse:collapse;">
+                    <thead>
+                        <tr style="background:#fdf2f8;">
+                            <th style="text-align:left;padding:.8rem 1.5rem;font-size:.68rem;
+                            font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+                            color:#9d4b7a;">Ad Soyad</th>
+                            <th style="text-align:left;padding:.8rem 1rem;font-size:.68rem;
+                            font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+                            color:#9d4b7a;">E-posta</th>
+                            <th style="text-align:left;padding:.8rem 1rem;font-size:.68rem;
+                            font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+                            color:#9d4b7a;">Kayıt</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var u in Model)
+                        {
+                            <tr style="border-top:1px solid #fce7f3;">
+                                <td style="padding:.85rem 1.5rem;">
+                                    <div style="display:flex;align-items:center;gap:.6rem;">
+                                        <div style="width:32px;height:32px;border-radius:50%;
+                                            background:linear-gradient(135deg,#f472b6,#be185d);
+                                            color:white;display:flex;align-items:center;
+                                            justify-content:center;font-size:.75rem;
+                                            font-weight:700;flex-shrink:0;">
+                                            @(u.FullName.Length > 0
+                                                ? u.FullName.Substring(0, 1).ToUpper() : "?")
+                                        </div>
+                                        <span style="font-size:.82rem;font-weight:500;color:#881337;">
+                                            @u.FullName
+                                        </span>
+                                    </div>
+                                </td>
+                                <td style="padding:.85rem 1rem;font-size:.8rem;
+                                    color:#7c3f60;font-weight:300;">
+                                    @u.Email
+                                </td>
+                                <td style="padding:.85rem 1rem;font-size:.78rem;
+                                    color:#be7094;font-weight:300;">
+                                    @u.RegisteredAt.ToString("dd.MM.yyyy HH:mm")
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
