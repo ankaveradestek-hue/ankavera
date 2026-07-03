@@ -23,6 +23,10 @@ WORKDIR /app
 ENV ASPNETCORE_HTTP_PORTS=8080
 EXPOSE 8080
 
+# Create the SQLite data directory owned by `app` so the non-root user can write
+# the database file there. A named volume mounted here inherits this ownership.
+RUN mkdir -p /data && chown app:app /data
+
 # Copy only the published output; run as the built-in non-root `app` user.
 COPY --from=build --chown=app:app /app/publish .
 USER app

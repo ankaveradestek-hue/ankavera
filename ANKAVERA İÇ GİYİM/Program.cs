@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // 1. DbContext
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(
+    options.UseSqlite(
         builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // 2. Identity

@@ -3,7 +3,6 @@ using System;
 using ANKAVERA_İÇ_GİYİM.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -16,73 +15,69 @@ namespace ANKAVERA_SİTESİ.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.28")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
-
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.28");
 
             modelBuilder.Entity("ANKAVERA_İÇ_GİYİM.Models.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("AcceptsMarketing")
-                        .HasColumnType("bit");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("bit");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("FullName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("bit");
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("datetimeoffset");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("NormalizedUserName")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("bit");
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("RegisteredAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("bit");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -91,8 +86,7 @@ namespace ANKAVERA_SİTESİ.Migrations
 
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
-                        .HasDatabaseName("UserNameIndex")
-                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+                        .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers", (string)null);
                 });
@@ -101,46 +95,44 @@ namespace ANKAVERA_SİTESİ.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("AppUserId")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("CargoCompany")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("CargoTrackingNumber")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("City")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("CustomerEmail")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("CustomerName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("OrderDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("OrderStatus")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ShippingAddress")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.Property<decimal>("TotalPrice")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("TrackingCode")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -151,21 +143,19 @@ namespace ANKAVERA_SİTESİ.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("OrderId")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("ProductId")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("Quantity")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.Property<decimal>("UnitPrice")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -180,48 +170,46 @@ namespace ANKAVERA_SİTESİ.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Badge")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("CategoryName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ImageUrl")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool>("IsBestseller")
-                        .HasColumnType("bit");
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool>("IsNew")
-                        .HasColumnType("bit");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasColumnType("TEXT");
 
                     b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("StockCount")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -233,7 +221,7 @@ namespace ANKAVERA_SİTESİ.Migrations
                             Id = 1,
                             Badge = "Yeni",
                             CategoryName = "Saten",
-                            CreatedAt = new DateTime(2026, 7, 3, 20, 30, 4, 607, DateTimeKind.Local).AddTicks(5604),
+                            CreatedAt = new DateTime(2026, 7, 3, 23, 18, 47, 504, DateTimeKind.Local).AddTicks(1927),
                             Description = "Pudra pembe, ipeksi saten kumaş, dantelli kenar.",
                             ImageUrl = "https://images.unsplash.com/photo-1617922001439-4a2e6562f328?w=600&q=80",
                             IsActive = true,
@@ -248,7 +236,7 @@ namespace ANKAVERA_SİTESİ.Migrations
                             Id = 2,
                             Badge = "Çok Satan",
                             CategoryName = "Dantel",
-                            CreatedAt = new DateTime(2026, 7, 3, 20, 30, 4, 607, DateTimeKind.Local).AddTicks(5607),
+                            CreatedAt = new DateTime(2026, 7, 3, 23, 18, 47, 504, DateTimeKind.Local).AddTicks(1930),
                             Description = "Fransız danteli, sofistike tasarım.",
                             ImageUrl = "https://images.unsplash.com/photo-1604671368394-2240d0b1bb6c?w=600&q=80",
                             IsActive = true,
@@ -263,7 +251,7 @@ namespace ANKAVERA_SİTESİ.Migrations
                             Id = 3,
                             Badge = "",
                             CategoryName = "Saten",
-                            CreatedAt = new DateTime(2026, 7, 3, 20, 30, 4, 607, DateTimeKind.Local).AddTicks(5609),
+                            CreatedAt = new DateTime(2026, 7, 3, 23, 18, 47, 504, DateTimeKind.Local).AddTicks(1932),
                             Description = "Uzun kesim, V yaka, ince askılı.",
                             ImageUrl = "https://images.unsplash.com/photo-1631947430066-48c30d57b943?w=600&q=80",
                             IsActive = true,
@@ -278,7 +266,7 @@ namespace ANKAVERA_SİTESİ.Migrations
                             Id = 4,
                             Badge = "Özel",
                             CategoryName = "Bridal",
-                            CreatedAt = new DateTime(2026, 7, 3, 20, 30, 4, 607, DateTimeKind.Local).AddTicks(5611),
+                            CreatedAt = new DateTime(2026, 7, 3, 23, 18, 47, 504, DateTimeKind.Local).AddTicks(1933),
                             Description = "Düğün gecesi 3'lü lüks set.",
                             ImageUrl = "https://images.unsplash.com/photo-1616627547584-bf28cee262db?w=600&q=80",
                             IsActive = true,
@@ -293,7 +281,7 @@ namespace ANKAVERA_SİTESİ.Migrations
                             Id = 5,
                             Badge = "Çok Satan",
                             CategoryName = "Dantel",
-                            CreatedAt = new DateTime(2026, 7, 3, 20, 30, 4, 607, DateTimeKind.Local).AddTicks(5613),
+                            CreatedAt = new DateTime(2026, 7, 3, 23, 18, 47, 504, DateTimeKind.Local).AddTicks(1935),
                             Description = "Klasik korse, straplez kullanım.",
                             ImageUrl = "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=600&q=80",
                             IsActive = true,
@@ -308,7 +296,7 @@ namespace ANKAVERA_SİTESİ.Migrations
                             Id = 6,
                             Badge = "Yeni",
                             CategoryName = "Saten",
-                            CreatedAt = new DateTime(2026, 7, 3, 20, 30, 4, 607, DateTimeKind.Local).AddTicks(5615),
+                            CreatedAt = new DateTime(2026, 7, 3, 23, 18, 47, 504, DateTimeKind.Local).AddTicks(1945),
                             Description = "Diz altı, kemer detaylı saten.",
                             ImageUrl = "https://images.unsplash.com/photo-1609081219090-a6d81d3085bf?w=600&q=80",
                             IsActive = true,
@@ -323,26 +311,25 @@ namespace ANKAVERA_SİTESİ.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("NormalizedName")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedName")
                         .IsUnique()
-                        .HasDatabaseName("RoleNameIndex")
-                        .HasFilter("[NormalizedName] IS NOT NULL");
+                        .HasDatabaseName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles", (string)null);
                 });
@@ -351,19 +338,17 @@ namespace ANKAVERA_SİTESİ.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("ClaimType")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ClaimValue")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("RoleId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -376,19 +361,17 @@ namespace ANKAVERA_SİTESİ.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("ClaimType")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ClaimValue")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -400,17 +383,17 @@ namespace ANKAVERA_SİTESİ.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ProviderDisplayName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
@@ -422,10 +405,10 @@ namespace ANKAVERA_SİTESİ.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
                     b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("RoleId")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("UserId", "RoleId");
 
@@ -437,16 +420,16 @@ namespace ANKAVERA_SİTESİ.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
                     b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Value")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
