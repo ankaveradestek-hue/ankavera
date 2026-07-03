@@ -96,8 +96,18 @@ static async Task SeedAsync(WebApplication app)
         if (!await roleMgr.RoleExistsAsync(role))
             await roleMgr.CreateAsync(new IdentityRole(role));
 
-    const string email = "admin@ankavera.com";
-    const string pass = "ZuleyhaAAnKavEra()%&43";
+    var config = scope.ServiceProvider.GetRequiredService<IConfiguration>();
+    var email = config["SeedAdmin:Email"] ?? "admin@ankavera.com";
+    var pass = config["SeedAdmin:Password"];
+
+    // Never hardcode the admin password. If it isn't configured (user-secrets,
+    // env var, etc.), skip seeding rather than falling back to a known value.
+    if (string.IsNullOrWhiteSpace(pass))
+    {
+        var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+        logger.LogWarning("SeedAdmin:Password is not configured — skipping admin user seed.");
+        return;
+    }
 
     if (await userMgr.FindByEmailAsync(email) == null)
     {
