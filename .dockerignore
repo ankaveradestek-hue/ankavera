@@ -16,6 +16,7 @@
 **/*.user
 **/secrets.json
 **/appsettings.*.local.json
+**/.env
 
 # OS junk
 **/.DS_Store

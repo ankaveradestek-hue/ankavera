@@ -83,6 +83,12 @@ app.Run();
 static async Task SeedAsync(WebApplication app)
 {
     using var scope = app.Services.CreateScope();
+
+    // Apply any pending EF Core migrations so the schema exists on a fresh
+    // database (e.g. the SQL Server container spun up by docker compose).
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    await db.Database.MigrateAsync();
+
     var roleMgr = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
     var userMgr = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
